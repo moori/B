@@ -14,6 +14,8 @@ public class Bullet : MonoBehaviour
     public float radius;
     Collider2D[] hitsBuffer = new Collider2D[1];
 
+    public static System.Action OnBulletHit;
+
 
     public void Shoot(Vector3 direction)
     {
@@ -53,6 +55,7 @@ public class Bullet : MonoBehaviour
             p.Play();
 
             gameObject.SetActive(false);
+            OnBulletHit?.Invoke();
         }
 
     }

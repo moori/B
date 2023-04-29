@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using TMPro;
+using DG.Tweening;
 
 public class GameController : MonoBehaviour
 {
@@ -22,6 +24,14 @@ public class GameController : MonoBehaviour
     [Header("GameOver")]
     public GameObject gameoverScreen;
 
+    [Header("Score")]
+    public TextMeshProUGUI scoreText;
+    public int score;
+    private bool scoreTextTweening;
+
+    public const int COIN_SCORE = 20;
+    public const int BULLET_HIT_SCORE = 1;
+
     private void Awake()
     {
         if (instance == null)
@@ -33,6 +43,8 @@ public class GameController : MonoBehaviour
         player = FindObjectOfType<Player>();
 
         rand = new System.Random();
+
+        Bullet.OnBulletHit += OnBulletHit;
     }
 
     private void Update()
@@ -72,10 +84,11 @@ public class GameController : MonoBehaviour
         var pulse = PoolManager.instance.GetPulse();
         pulse.transform.position = pos;
         pulse.StartPulse();
-        DOVirtual.DelayedCall(1f, () => {
+        DOVirtual.DelayedCall(1f, () =>
+        {
             var enemy = PoolManager.instance.GetSimpleEnemy();
             enemy.transform.position = pos;
-      
+
             enemy.gameObject.SetActive(true);
             enemiesAlive.Add(enemy);
         });
@@ -84,7 +97,8 @@ public class GameController : MonoBehaviour
     private void OnEnemyDeath(Enemy enemy)
     {
         enemiesAlive.Remove(enemy);
-        DOVirtual.DelayedCall(6f, () => { 
+        DOVirtual.DelayedCall(6f, () =>
+        {
             Spawn();
         });
 
@@ -105,7 +119,8 @@ public class GameController : MonoBehaviour
         {
             gameoverScreen.SetActive(true);
         });
-        DOVirtual.DelayedCall(5f, () => {
+        DOVirtual.DelayedCall(5f, () =>
+        {
             SceneManager.LoadScene(0);
         });
     }
@@ -115,9 +130,9 @@ public class GameController : MonoBehaviour
         while (true)
         {
             var ammoPercent = player.ammo / (float)player.maxAmmo;
-            if(ammoPercent < .2f)
+            if (ammoPercent < .2f)
             {
-                if(Random.value <= .5f)
+                if (Random.value <= .5f)
                 {
                     SpawnBattery();
                     yield return new WaitForSeconds(10f);
@@ -144,4 +159,28 @@ public class GameController : MonoBehaviour
         battery.SpawnBattery(point.up);
     }
 
+    public void OnCollectCoin()
+    {
+        score += player.coins + COIN_SCORE;
+        UpdateScoreText(score);
+    }
+    public void OnBulletHit()
+    {
+        score += BULLET_HIT_SCORE;
+        UpdateScoreText(score);
+    }
+        
+
+    public void UpdateScoreText(int score)
+    {
+        scoreText.text = string.Format("{0:000000}", score);
+        if (!scoreTextTweening)
+        {
+            scoreTextTweening = true;
+            scoreText.transform.DOPunchScale(Vector3.one * 0.1f, 0.15f).OnComplete(() =>
+            {
+                scoreTextTweening = false;
+            });
+        }
+    }
 }

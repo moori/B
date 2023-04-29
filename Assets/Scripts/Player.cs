@@ -40,10 +40,15 @@ public class Player : MonoBehaviour
     [Header("Bubble")]
     public float bubbleRadius;
     public float bubbleDuration;
+    public float shieldRechargeDuration;
+    public int unlockedShields => shieldCounters.Count(x => x.gameObject.activeInHierarchy);
     public bool isBubbling;
-    public float bubbleStartTime;
     public SpriteRenderer bubbleSprite;
     public LayerMask collectibleLayerMask;
+    public List<ShieldCounter> shieldCounters;
+    public GameObject shieldIndicator;
+    private float bubbleStartTime;
+    private bool canActivateShield => shieldCounters.Any(x => x.isFull);
 
     [Header("Coins")]
     public float coinAttractionRadius;
@@ -67,7 +72,8 @@ public class Player : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
 
-        healthComponent = GetComponent<HealthComponent>();
+        healthComponent = GetComponent<HealthComponent>(); 
+        SetShieldCounter();
     }
 
     void Update()
@@ -102,6 +108,11 @@ public class Player : MonoBehaviour
             if (hitsBuffer[i].gameObject.TryGetComponent<Bullet>(out var enemyBullet))
             {
                 enemyBullet.Kill();
+                var p = PoolManager.instance.GetShieldHitParticle();
+                p.transform.position = enemyBullet.transform.position;
+                p.transform.forward = -enemyBullet.transform.up;
+                p.gameObject.SetActive(true);
+                p.Play();
             }
         }
     }
@@ -174,14 +185,19 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (PlayerInputs.Bubble)
+            if (PlayerInputs.Bubble && canActivateShield)
             {
                 bubbleStartTime = Time.time;
                 bubbleSprite.transform.localScale = Vector3.zero;
-                bubbleSprite.transform.DOScale(0.5f, 0.075f);
+                bubbleSprite.transform.DOScale(bubbleRadius, 0.075f);
                 isBubbling = true;
+
+                var shieldCounter = shieldCounters.FirstOrDefault(x => x.isFull);
+                shieldCounter.StartUsing(bubbleDuration);
+                SetShieldCounter();
             }
         }
+
     }
 
     private void HandleShot()
@@ -224,6 +240,8 @@ public class Player : MonoBehaviour
 
     public void TakeHit(int damage)
     {
+        if (isBubbling) return;
+
         CameraController.instance.Shake(0.2f, 0.6f);
         Recharge(-.2f);
         if (ammo <= 0)
@@ -255,8 +273,13 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, coinCollectionRadius);
     }
 
-    public float GetHP_Percent()
+    public void SetShieldCounter()
     {
-        return healthComponent.HP / healthComponent.maxHP;
+        var shieldCounter = shieldCounters.FirstOrDefault(x => x.gameObject.activeInHierarchy && !x.isFull && !x.isInUse);
+        if (shieldCounter)
+        {
+            shieldCounter.StartCharging(shieldRechargeDuration);
+        }
+        shieldIndicator.SetActive(canActivateShield);
     }
 }

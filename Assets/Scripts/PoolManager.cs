@@ -15,6 +15,7 @@ public class PoolManager : MonoBehaviour
     public Pool batteryPool;
     public Pool coinPool;
     public Pool batteryShardPool;
+    public Pool shieldHitParticlePool;
 
     private void Awake()
     {
@@ -68,6 +69,10 @@ public class PoolManager : MonoBehaviour
     public Coin GetBatteryShard()
     {
         return batteryShardPool.GetItem().GetComponent<Coin>();
+    }
+    public ParticleSystem GetShieldHitParticle()
+    {
+        return shieldHitParticlePool.GetItem().GetComponent<ParticleSystem>();
     }
 }
 
