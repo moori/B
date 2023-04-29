@@ -23,38 +23,25 @@ public class CameraController : MonoBehaviour
         instance = null;
     }
 
-    [ContextMenu("Shake")]
-    public void Shake()
-    {
-        Shake(this.duration, this.intensity);
-    }
-
     public void Shake(float duration, float intensity)
     {
         if (isShaking) return;
+        isShaking = true;
         StartCoroutine(ShakeRoutine(duration, intensity));
     }
 
     public IEnumerator ShakeRoutine(float duration, float intensity)
     {
-        isShaking = true;
         var startTime = Time.time;
-        Vector3 originalPosition = transform.position;
+        //Vector3 originalPosition = transform.position;
         while (Time.time - startTime < duration)
         {
-            var pos = originalPosition + Random.insideUnitSphere * intensity;
-            transform.position = new Vector3(pos.x, pos.y, -10);
+            var pos =  Random.insideUnitSphere * intensity;
+            transform.localPosition = new Vector3(pos.x, pos.y, -10);
             yield return new WaitForEndOfFrame();
         }
         isShaking = false;
-        transform.position = originalPosition;
+        transform.localPosition = new Vector3(0,0,-10);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Shake();
-        }
-    }
 }

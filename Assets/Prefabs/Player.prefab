@@ -1882,8 +1882,8 @@ MonoBehaviour:
   speed: 9
   slowSpeed: 3
   currentSpeed: 0
-  horizontalBoundarie: 8.4
-  verticalBoundarie: 4.3
+  horizontalBoundarie: 11
+  verticalBoundarie: 5.5
   delayBetweenShots: 0.0375
   minAngleError: 5
   turret: {fileID: 2086387326025213494}
