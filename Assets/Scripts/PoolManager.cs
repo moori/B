@@ -14,6 +14,7 @@ public class PoolManager : MonoBehaviour
     public Pool pulsePool;
     public Pool batteryPool;
     public Pool coinPool;
+    public Pool batteryShardPool;
 
     private void Awake()
     {
@@ -63,6 +64,10 @@ public class PoolManager : MonoBehaviour
     public Coin GetCoin()
     {
         return coinPool.GetItem().GetComponent<Coin>();
+    }
+    public Coin GetBatteryShard()
+    {
+        return batteryShardPool.GetItem().GetComponent<Coin>();
     }
 }
 

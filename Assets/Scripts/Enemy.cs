@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Enemy : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class Enemy : MonoBehaviour
 
     [Header("Drop")]
     public int coinAmount;
+    public List<BatteryTimer> batteryTimers = new List<BatteryTimer>();
+    public float batteryLifetime;
 
 
     private void Awake()
@@ -43,6 +46,24 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        foreach (var batteryTimer in batteryTimers)
+        {
+            batteryTimer.Setup();
+        }
+        StepBatteryCounter();
+    }
+
+    public void StepBatteryCounter()
+    {
+        var counter = batteryTimers.FirstOrDefault(x => !x.isExpired);
+        if (counter)
+        {
+            counter.StartTimer(batteryLifetime);
+        }
+    }
+
     public void OnTakeDamage(int damage)
     {
 
@@ -66,5 +87,14 @@ public class Enemy : MonoBehaviour
             coin.Spawn(transform.position);
         }
 
+        if (batteryTimers.Count > 0)
+        {
+            var batShards = batteryTimers.Count(x => !x.isExpired);
+            for (int i = 0; i < batShards; i++)
+            {
+                var shard = PoolManager.instance.GetBatteryShard();
+                shard.Spawn(transform.position);
+            }
+        }
     }
 }
