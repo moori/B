@@ -1322,6 +1322,7 @@ MonoBehaviour:
   hpColors: []
   facePlayer: 1
   turningSpeed: 1.5
+  coinAmount: 8
 --- !u!114 &6408604097674909345
 MonoBehaviour:
   m_ObjectHideFlags: 0

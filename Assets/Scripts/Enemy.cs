@@ -14,6 +14,9 @@ public class Enemy : MonoBehaviour
     public bool facePlayer;
     public float turningSpeed;
 
+    [Header("Drop")]
+    public int coinAmount;
+
 
     private void Awake()
     {
@@ -54,5 +57,14 @@ public class Enemy : MonoBehaviour
         part.gameObject.SetActive(true);
         gameObject.SetActive(false);
         OnEnemyDeath?.Invoke(this);
+
+        Debug.Log($"Kill enemny {gameObject.name}. Spawn {coinAmount} coins.");
+        //coin
+        for (int i = 0; i < coinAmount; i++)
+        {
+            var coin = PoolManager.instance.GetCoin();
+            coin.Spawn(transform.position);
+        }
+
     }
 }

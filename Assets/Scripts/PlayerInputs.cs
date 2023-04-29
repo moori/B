@@ -12,9 +12,9 @@ public class PlayerInputs : MonoBehaviour
 
     private void Update()
     {
-        Fire = Input.GetKey(KeyCode.C) || Input.GetKey(KeyCode.J);
-        Bubble = Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.K);
-        Slow = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.L);
+        Fire = Input.GetButton("Fire") || Input.GetButton("Fire1");
+        Bubble = Input.GetButton("Bubble") || Input.GetButton("Fire2");
+        Slow = Input.GetButton("Slow") || Input.GetButton("Fire3");
         Horizontal = Input.GetAxisRaw("Horizontal");
         Vertical = Input.GetAxisRaw("Vertical");
     }

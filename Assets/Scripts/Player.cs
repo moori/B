@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
     private bool isShooting;
     public int maxAmmo = 20000;
     public int ammo;
-    Collider2D[] hitsBuffer = new Collider2D[1];
+    Collider2D[] hitsBuffer = new Collider2D[10];
 
     public UnityEvent<int> OnShoot;
     public UnityEvent<float> OnAmmoChange;
@@ -44,6 +45,14 @@ public class Player : MonoBehaviour
     public SpriteRenderer bubbleSprite;
     public LayerMask collectibleLayerMask;
 
+    [Header("Coins")]
+    public float coinAttractionRadius;
+    public float coinCollectionRadius;
+    public float coinAttractionSpeed;
+    public LayerMask coinCollectibleLayerMask;
+    Collider2D[] coinHitsBuffer = new Collider2D[20];
+    public int coins = 0;
+    public UnityEvent<int> OnCollectCoin;
 
     private void Awake()
     {
@@ -73,16 +82,54 @@ public class Player : MonoBehaviour
     {
         if (isBubbling)
         {
-            int numHits = Physics2D.OverlapCircleNonAlloc(transform.position, bubbleRadius, hitsBuffer, collectibleLayerMask.value);
-            for (int i = 0; i < numHits; i++)
+            HandleFixedBubble();
+        }
+
+        HandleFixedCoins();
+    }
+
+    private void HandleFixedBubble()
+    {
+        int numHits = Physics2D.OverlapCircleNonAlloc(transform.position, bubbleRadius, hitsBuffer, collectibleLayerMask.value);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (hitsBuffer[i].gameObject.TryGetComponent<Battery>(out var battery))
             {
-                if(hitsBuffer[i].gameObject.TryGetComponent<Battery>(out var battery))
-                {
-                    Recharge(battery.percentCharge);
-                    battery.Collect();
-                }
+                Recharge(battery.percentCharge);
+                battery.Collect();
+            }
+
+            if (hitsBuffer[i].gameObject.TryGetComponent<Bullet>(out var enemyBullet))
+            {
+                enemyBullet.Kill();
             }
         }
+    }
+    private void HandleFixedCoins()
+    {
+        int numHits = Physics2D.OverlapCircleNonAlloc(transform.position, coinAttractionRadius, coinHitsBuffer, coinCollectibleLayerMask.value);
+        for (int i = 0; i < numHits; i++)
+        {
+            if (coinHitsBuffer[i].gameObject.TryGetComponent<Coin>(out var coin))
+            {
+                var distance = Vector3.Distance(transform.position, coin.transform.position);
+                if (distance <= coinCollectionRadius)
+                {
+                    coin.Kill();
+                    CollectCoin();
+                    continue;
+                }
+
+                var attractionDir = (transform.position - coin.transform.position).normalized;
+                coin.transform.position += attractionDir * coinAttractionSpeed * Mathf.Lerp(3,1, distance/coinAttractionRadius ) * Time.fixedDeltaTime;
+            }
+        }
+    }
+
+    private void CollectCoin()
+    {
+        coins++;
+        OnCollectCoin?.Invoke(coins);
     }
 
     public void Recharge(float percent)
@@ -202,6 +249,10 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, bubbleRadius);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, coinAttractionRadius);
+        Gizmos.DrawWireSphere(transform.position, coinCollectionRadius);
     }
 
     public float GetHP_Percent()

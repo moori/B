@@ -101,12 +101,12 @@ public class GameController : MonoBehaviour
             }
         }
 
-        DOVirtual.DelayedCall(2f, () =>
+        DOVirtual.DelayedCall(1f, () =>
         {
             gameoverScreen.SetActive(true);
         });
         DOVirtual.DelayedCall(5f, () => {
-                SceneManager.LoadScene(0);
+            SceneManager.LoadScene(0);
         });
     }
 
@@ -120,6 +120,7 @@ public class GameController : MonoBehaviour
                 if(Random.value <= .5f)
                 {
                     SpawnBattery();
+                    yield return new WaitForSeconds(10f);
                 }
             }
             else if (ammoPercent < .5f)
@@ -127,6 +128,7 @@ public class GameController : MonoBehaviour
                 if (Random.value <= .15f)
                 {
                     SpawnBattery();
+                    yield return new WaitForSeconds(10f);
                 }
             }
             yield return new WaitForSeconds(10f);
