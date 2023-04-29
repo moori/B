@@ -12,6 +12,7 @@ public class PoolManager : MonoBehaviour
     public Pool dummyEnemyPool;
     public Pool simpleEnemyPool;
     public Pool pulsePool;
+    public Pool batteryPool;
 
     private void Awake()
     {
@@ -53,6 +54,10 @@ public class PoolManager : MonoBehaviour
     public Pulse GetPulse()
     {
         return pulsePool.GetItem().GetComponent<Pulse>();
+    }
+    public Battery GetBattery()
+    {
+        return batteryPool.GetItem().GetComponent<Battery>();
     }
 }
 

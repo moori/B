@@ -7,6 +7,8 @@ using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
+    private HealthComponent healthComponent;
+
     [Header("Movement")]
     public float speed=9f;
     public float slowSpeed=3f;
@@ -30,7 +32,9 @@ public class Player : MonoBehaviour
     Collider2D[] hitsBuffer = new Collider2D[1];
 
     public UnityEvent<int> OnShoot;
-    public UnityEvent OnAmmoChange;
+    public UnityEvent<float> OnAmmoChange;
+    public UnityEvent<float> OnRecharge;
+    public UnityEvent OnDie;
 
     [Header("Bubble")]
     public float bubbleRadius;
@@ -53,6 +57,8 @@ public class Player : MonoBehaviour
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
+
+        healthComponent = GetComponent<HealthComponent>();
     }
 
     void Update()
@@ -82,7 +88,8 @@ public class Player : MonoBehaviour
     public void Recharge(float percent)
     {
         ammo = Mathf.Clamp(ammo + Mathf.RoundToInt(maxAmmo * percent), 0, maxAmmo);
-        OnAmmoChange?.Invoke();
+        OnRecharge?.Invoke(percent);
+        OnAmmoChange?.Invoke(ammo / (float)maxAmmo);
     }
 
     private void HandleMovement()
@@ -156,6 +163,7 @@ public class Player : MonoBehaviour
         var shotDir = turret.transform.up + turret.transform.TransformVector(AddNoiseOnAngle(-minAngleError,minAngleError));
         b.Shoot(shotDir);
         OnShoot?.Invoke(1);
+        OnAmmoChange?.Invoke(ammo/(float)maxAmmo);
         ammo -= 1;
     }
 
@@ -169,12 +177,35 @@ public class Player : MonoBehaviour
 
     public void TakeHit(int damage)
     {
-        CameraController.instance.Shake(0.3f, 0.6f);
+        CameraController.instance.Shake(0.2f, 0.6f);
+        Recharge(-.2f);
+        if (ammo <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        Debug.Log("Game Over");
+
+        OnDie?.Invoke();
+        gameObject.SetActive(false);
+
+        CameraController.instance.Shake(0.4f, 0.6f);
+        var part = PoolManager.instance.GetExplosionParticles();
+        part.transform.position = transform.position;
+        part.gameObject.SetActive(true);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, bubbleRadius);
+    }
+
+    public float GetHP_Percent()
+    {
+        return healthComponent.HP / healthComponent.maxHP;
     }
 }

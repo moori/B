@@ -17,7 +17,7 @@ public class BulletSpawner : MonoBehaviour
 
     public IEnumerator FireAllRoutine()
     {
-        yield return null;
+        yield return new WaitForSeconds(1f);
         while (true)
         {
             for (int i = 0; i < fireLocalDirections.Count; i++)

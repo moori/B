@@ -5328,6 +5328,7 @@ GameObject:
   - component: {fileID: 7222708026823465426}
   - component: {fileID: 7222708026823465421}
   - component: {fileID: 7222708026823465420}
+  - component: {fileID: 8485587368643438605}
   m_Layer: 10
   m_Name: Battery
   m_TagString: Untagged
@@ -5407,6 +5408,19 @@ MonoBehaviour:
   speed: 2
   percentCharge: 1
   moveDirection: {x: 0, y: 0, z: 0}
+  isActive: 0
+--- !u!114 &8485587368643438605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7222708026823465423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b27b9401d77fbc4fbb94f609b4794e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7222708027036585600
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,8 +14,6 @@ public class Bullet : MonoBehaviour
     public float radius;
     Collider2D[] hitsBuffer = new Collider2D[1];
 
-    public const float H_Bound = 9;
-    public const float V_Bound = 6;
 
     public void Shoot(Vector3 direction)
     {
@@ -57,10 +55,6 @@ public class Bullet : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        if(Mathf.Abs(transform.position.x) >= H_Bound || Mathf.Abs(transform.position.y) >= V_Bound)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     private void OnDrawGizmosSelected()

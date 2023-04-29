@@ -11,6 +11,7 @@ public class Battery : MonoBehaviour
     public float speed = 2;
     public float percentCharge = 1;
     public Vector3 moveDirection;
+    public bool isActive;
 
     private void OnEnable()
     {
@@ -19,11 +20,21 @@ public class Battery : MonoBehaviour
 
     private void Update()
     {
+        if (!isActive) return;
+
         transform.position += moveDirection * speed * Time.deltaTime;
+    }
+
+    public void SpawnBattery(Vector3 moveDir)
+    {
+        isActive = true;
+        gameObject.SetActive(true);
+        moveDirection = moveDir;
     }
 
     internal void Collect()
     {
         gameObject.SetActive(false);
+        isActive = false;
     }
 }

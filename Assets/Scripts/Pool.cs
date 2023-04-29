@@ -19,6 +19,7 @@ public class Pool : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             var b = Instantiate(prefab);
+            b.transform.SetParent(transform);
             pool.Add(b);
             b.gameObject.SetActive(false);
         }
