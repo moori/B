@@ -44,10 +44,12 @@ public class Player : MonoBehaviour
     public int unlockedShields => shieldCounters.Count(x => x.gameObject.activeInHierarchy);
     public bool isBubbling;
     public SpriteRenderer bubbleSprite;
+    public SpriteRenderer bubbleShadowSprite;
     public LayerMask collectibleLayerMask;
     public List<ShieldCounter> shieldCounters;
     public GameObject shieldIndicator;
     private float bubbleStartTime;
+    public UnityEvent OnShieldReady;
     private bool canActivateShield => shieldCounters.Any(x => x.isFull);
 
     [Header("Coins")]
@@ -281,5 +283,14 @@ public class Player : MonoBehaviour
             shieldCounter.StartCharging(shieldRechargeDuration);
         }
         shieldIndicator.SetActive(canActivateShield);
+
+        if(shieldCounters.Count(x => x.gameObject.activeInHierarchy && x.isFull && !x.isInUse) == 1){
+            bubbleShadowSprite.DOFade(.25f, .25f);
+        }
+
+        if (shieldCounters.Count(x => x.gameObject.activeInHierarchy && x.isFull && !x.isInUse) == 0)
+        {
+            bubbleShadowSprite.DOFade(0f, .25f);
+        }
     }
 }

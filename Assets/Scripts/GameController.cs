@@ -66,6 +66,7 @@ public class GameController : MonoBehaviour
         }
 
         StartCoroutine(BatterySpawnerRoutine());
+        UpdateScoreText(0);
     }
 
     private void OnDestroy()
@@ -173,7 +174,7 @@ public class GameController : MonoBehaviour
 
     public void UpdateScoreText(int score)
     {
-        scoreText.text = string.Format("{0:000000}", score);
+        scoreText.text = string.Format("{0:000000000}", score);
         if (!scoreTextTweening)
         {
             scoreTextTweening = true;
