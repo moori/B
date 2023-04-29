@@ -27,8 +27,10 @@ public class Player : MonoBehaviour
     private bool isShooting;
     public int maxAmmo = 20000;
     public int ammo;
+    Collider2D[] hitsBuffer = new Collider2D[1];
 
     public UnityEvent<int> OnShoot;
+    public UnityEvent OnAmmoChange;
 
     [Header("Bubble")]
     public float bubbleRadius;
@@ -36,6 +38,8 @@ public class Player : MonoBehaviour
     public bool isBubbling;
     public float bubbleStartTime;
     public SpriteRenderer bubbleSprite;
+    public LayerMask collectibleLayerMask;
+
 
     private void Awake()
     {
@@ -59,10 +63,32 @@ public class Player : MonoBehaviour
         HandleShot();
     }
 
+    private void FixedUpdate()
+    {
+        if (isBubbling)
+        {
+            int numHits = Physics2D.OverlapCircleNonAlloc(transform.position, bubbleRadius, hitsBuffer, collectibleLayerMask.value);
+            for (int i = 0; i < numHits; i++)
+            {
+                if(hitsBuffer[i].gameObject.TryGetComponent<Battery>(out var battery))
+                {
+                    Recharge(battery.percentCharge);
+                    battery.Collect();
+                }
+            }
+        }
+    }
+
+    public void Recharge(float percent)
+    {
+        ammo = Mathf.Clamp(ammo + Mathf.RoundToInt(maxAmmo * percent), 0, maxAmmo);
+        OnAmmoChange?.Invoke();
+    }
+
     private void HandleMovement()
     {
-        inputDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-        currentSpeed = Input.GetKey(KeyCode.L) ? slowSpeed : speed;
+        inputDir = new Vector2(PlayerInputs.Horizontal, PlayerInputs.Vertical).normalized;
+        currentSpeed = PlayerInputs.Slow ? slowSpeed : speed;
         var moveVec = inputDir * currentSpeed * Time.deltaTime;
         var pos = transform.position + new Vector3(moveVec.x, moveVec.y, 0);
 
@@ -73,7 +99,7 @@ public class Player : MonoBehaviour
 
     private void HandleTurret() {
         if (isShooting) return;
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        if (PlayerInputs.Horizontal != 0 || PlayerInputs.Vertical != 0)
         {
             moveDirIndex = (moveDirIndex + 1) % lastMoveDirectionsAmount;
             lastMoveDirections[moveDirIndex] = inputDir;
@@ -94,7 +120,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.K))
+            if (PlayerInputs.Bubble)
             {
                 bubbleStartTime = Time.time;
                 bubbleSprite.transform.localScale = Vector3.zero;
@@ -106,7 +132,7 @@ public class Player : MonoBehaviour
 
     private void HandleShot()
     {
-        if (Input.GetKey(KeyCode.J))
+        if (PlayerInputs.Fire)
         {
             if(Time.time - timeLastShot >= delayBetweenShots)
             {
@@ -139,5 +165,16 @@ public class Player : MonoBehaviour
 
         Vector3 noise = new Vector3(Mathf.Sin(2 * Mathf.PI * xNoise / 360), 0, 0);
         return noise;
+    }
+
+    public void TakeHit(int damage)
+    {
+        CameraController.instance.Shake(0.3f, 0.6f);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, bubbleRadius);
     }
 }

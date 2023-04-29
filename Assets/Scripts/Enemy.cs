@@ -6,6 +6,14 @@ public class Enemy : MonoBehaviour
 {
     public Color[] hpColors;
     private HealthComponent healthComponent;
+    private Player player;
+
+    public static System.Action<Enemy> OnEnemyDeath;
+
+    [Header("Movement")]
+    public bool facePlayer;
+    public float turningSpeed;
+
 
     private void Awake()
     {
@@ -14,11 +22,22 @@ public class Enemy : MonoBehaviour
             healthComponent = h;
             healthComponent.OnDie.AddListener(Die);
         }
+
+        player = FindObjectOfType<Player>();
     }
 
     private void OnDestroy()
     {
         healthComponent?.OnDie.RemoveListener(Die);
+    }
+
+    private void Update()
+    {
+        if (facePlayer)
+        {
+            //var playerDirection = Quaternion.LookRotation(Vector3.forward, player.transform.position-transform.position);
+            transform.up = Vector3.Lerp(transform.up, player.transform.position - transform.position, turningSpeed * Time.deltaTime);
+        }
     }
 
     public void OnTakeDamage(int damage)
@@ -33,6 +52,7 @@ public class Enemy : MonoBehaviour
         var part = PoolManager.instance.GetExplosionParticles();
         part.transform.position = transform.position;
         part.gameObject.SetActive(true);
-        Destroy(gameObject,0.01f);
+        gameObject.SetActive(false);
+        OnEnemyDeath?.Invoke(this);
     }
 }

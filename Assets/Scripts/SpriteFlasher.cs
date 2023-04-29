@@ -40,6 +40,19 @@ public class SpriteFlasher : MonoBehaviour
         StartCoroutine(FlashRoutine());
     }
 
+    private void OnEnable()
+    {
+        sprite.transform.localPosition = originalLocalPosition;
+        sprite.color = originalColor;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        sprite.transform.localPosition = originalLocalPosition;
+        sprite.color = originalColor;
+    }
+
     private IEnumerator FlashRoutine()
     {
         var t = (flashDuration / (float)amount) * 0.5f;

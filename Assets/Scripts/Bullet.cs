@@ -14,6 +14,9 @@ public class Bullet : MonoBehaviour
     public float radius;
     Collider2D[] hitsBuffer = new Collider2D[1];
 
+    public const float H_Bound = 9;
+    public const float V_Bound = 6;
+
     public void Shoot(Vector3 direction)
     {
         gameObject.SetActive(true);
@@ -33,7 +36,7 @@ public class Bullet : MonoBehaviour
         if (isDead) return;
 
         transform.position += transform.up * speed * Time.deltaTime;
-        if (Time.time - startTime >= lifetime) Kill();
+        //if (Time.time - startTime >= lifetime) Kill();
     }
 
     private void FixedUpdate()
@@ -50,12 +53,19 @@ public class Bullet : MonoBehaviour
             p.transform.forward = -transform.up;
             p.gameObject.SetActive(true);
             p.Play();
+
+            gameObject.SetActive(false);
+        }
+
+        if(Mathf.Abs(transform.position.x) >= H_Bound || Mathf.Abs(transform.position.y) >= V_Bound)
+        {
+            gameObject.SetActive(false);
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(collisionOffset, radius);
+        Gizmos.DrawWireSphere(transform.position + collisionOffset, radius);
     }
 }

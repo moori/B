@@ -29,6 +29,11 @@ public class HealthComponent : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        HP = maxHP;
+    }
+
 
     public void TakeDamage(int damage)
     {

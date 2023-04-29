@@ -7,7 +7,11 @@ public class PoolManager : MonoBehaviour
     public static PoolManager instance;
     public Pool hitParticlePool;
     public Pool playerBulletPool;
+    public Pool enemyArrowBulletPool;
     public Pool explosionParticletPool;
+    public Pool dummyEnemyPool;
+    public Pool simpleEnemyPool;
+    public Pool pulsePool;
 
     private void Awake()
     {
@@ -30,8 +34,25 @@ public class PoolManager : MonoBehaviour
     {
         return playerBulletPool.GetItem().GetComponent<Bullet>();
     }
+    public Bullet GetEnemyArrowBullet()
+    {
+        return enemyArrowBulletPool.GetItem().GetComponent<Bullet>();
+    }
     public ParticleSystem GetExplosionParticles()
     {
         return explosionParticletPool.GetItem().GetComponent<ParticleSystem>();
     }
+    public Enemy GetDummyEnemy()
+    {
+        return dummyEnemyPool.GetItem().GetComponent<Enemy>();
+    }
+    public Enemy GetSimpleEnemy()
+    {
+        return simpleEnemyPool.GetItem().GetComponent<Enemy>();
+    }
+    public Pulse GetPulse()
+    {
+        return pulsePool.GetItem().GetComponent<Pulse>();
+    }
 }
+
