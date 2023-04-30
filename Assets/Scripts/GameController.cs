@@ -32,6 +32,10 @@ public class GameController : MonoBehaviour
     public const int COIN_SCORE = 20;
     public const int BULLET_HIT_SCORE = 1;
 
+
+    public const float HORIZONTAL_MOVEMENT_BOUND = 11;
+    public const float VERTICAL_MOVEMENT_BOUND = 5.5f;
+
     private void Awake()
     {
         if (instance == null)
@@ -183,5 +187,10 @@ public class GameController : MonoBehaviour
                 scoreTextTweening = false;
             });
         }
+    }
+
+    public static Vector3 GetClosestPositionInsideBounds(Vector3 pos)
+    {
+        return new Vector3(Mathf.Clamp(pos.x, -HORIZONTAL_MOVEMENT_BOUND, HORIZONTAL_MOVEMENT_BOUND), Mathf.Clamp(pos.y, -VERTICAL_MOVEMENT_BOUND, VERTICAL_MOVEMENT_BOUND), 0);
     }
 }

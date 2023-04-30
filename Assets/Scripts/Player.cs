@@ -159,9 +159,9 @@ public class Player : MonoBehaviour
         var moveVec = inputDir * currentSpeed * Time.deltaTime;
         var pos = transform.position + new Vector3(moveVec.x, moveVec.y, 0);
 
-        pos = new Vector3(Mathf.Clamp(pos.x, -horizontalBoundarie, horizontalBoundarie), Mathf.Clamp(pos.y, -verticalBoundarie, verticalBoundarie), 0);
+        //pos = new Vector3(Mathf.Clamp(pos.x, -horizontalBoundarie, horizontalBoundarie), Mathf.Clamp(pos.y, -verticalBoundarie, verticalBoundarie), 0);
 
-        transform.position = pos;
+        transform.position = GameController.GetClosestPositionInsideBounds(pos);
     }
 
     private void HandleTurret() {
@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
         ammo -= 1;
     }
 
-    Vector3 AddNoiseOnAngle(float min, float max)
+    public static Vector3 AddNoiseOnAngle(float min, float max)
     {
         float xNoise = UnityEngine.Random.Range(min, max);
 

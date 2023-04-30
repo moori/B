@@ -50,8 +50,10 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   - {x: 0.39, y: 1, z: 0}
   - {x: 1, y: 1, z: 0}
-  delayBetweenShots: 0.035
+  delayBetweenShots: 0
+  volleysPerAttack: 1
   delayBetweenAttacks: 2
+  delayBetweenVolleys: 0
 --- !u!1 &1670797548452518876
 GameObject:
   m_ObjectHideFlags: 0

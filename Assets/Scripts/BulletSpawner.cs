@@ -7,8 +7,16 @@ public class BulletSpawner : MonoBehaviour
     public List<Vector3> fireLocalDirections;
 
     public float delayBetweenShots=0.035f;
-    public float delayBetweenAttacks=2f;
+    public int volleysPerAttack = 1;
+    public float delayBetweenAttacks = 2f;
+    public float delayBetweenVolleys = 0f;
+    public float angleError = 0f;
 
+    enum AttackType
+    {
+        FireAll,
+        FireSequence
+    }
 
     private void OnEnable()
     {
@@ -20,11 +28,16 @@ public class BulletSpawner : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            for (int i = 0; i < fireLocalDirections.Count; i++)
+            for (int j = 0; j < volleysPerAttack; j++)
             {
-                Shoot(fireLocalDirections[i]);
-            }
 
+                for (int i = 0; i < fireLocalDirections.Count; i++)
+                {
+                    Shoot(fireLocalDirections[i] + Player.AddNoiseOnAngle(-angleError,angleError));
+                    yield return new WaitForSeconds(delayBetweenShots);
+                }
+                yield return new WaitForSeconds(delayBetweenVolleys);
+            }
             yield return new WaitForSeconds(delayBetweenAttacks);
         }
     }

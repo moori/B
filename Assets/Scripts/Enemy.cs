@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Enemy : MonoBehaviour
 {
@@ -14,12 +15,23 @@ public class Enemy : MonoBehaviour
     [Header("Movement")]
     public bool facePlayer;
     public float turningSpeed;
+    public float speed;
+    public MovePattern movePattern;
+    public List<Vector3> moveTargetsRelativeToPlayer = new List<Vector3>();
 
     [Header("Drop")]
     public int coinAmount;
     public List<BatteryTimer> batteryTimers = new List<BatteryTimer>();
     public float batteryLifetime;
 
+    private System.Random rand;
+
+
+    public enum MovePattern
+    {
+        Static,
+        Stalker
+    }
 
     private void Awake()
     {
@@ -30,6 +42,7 @@ public class Enemy : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
+        rand = new System.Random();
     }
 
     private void OnDestroy()
@@ -41,8 +54,41 @@ public class Enemy : MonoBehaviour
     {
         if (facePlayer)
         {
-            //var playerDirection = Quaternion.LookRotation(Vector3.forward, player.transform.position-transform.position);
             transform.up = Vector3.Lerp(transform.up, player.transform.position - transform.position, turningSpeed * Time.deltaTime);
+        }
+
+    }
+
+    public void SetMovementPattern()
+    {
+
+        switch (movePattern)
+        {
+            case MovePattern.Stalker:
+                StartCoroutine(StalketMovementPatternRoutine());
+                break;
+            case MovePattern.Static:
+            default:
+                break;
+        }
+    }
+
+
+    private IEnumerator StalketMovementPatternRoutine()
+    {
+        var point = moveTargetsRelativeToPlayer[rand.Next(moveTargetsRelativeToPlayer.Count)];
+        while (true)
+        {
+            var target = GameController.GetClosestPositionInsideBounds(player.transform.position + point);
+            if (Vector3.Distance(target, transform.position) < 1f)
+            {
+                yield return new WaitForFixedUpdate();
+                continue;
+            }
+
+            var dir = (target - transform.position).normalized;
+            transform.position += dir * speed * Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
     }
 
@@ -53,6 +99,7 @@ public class Enemy : MonoBehaviour
             batteryTimer.Setup();
         }
         StepBatteryCounter();
+        SetMovementPattern();
     }
 
     public void StepBatteryCounter()
@@ -94,6 +141,22 @@ public class Enemy : MonoBehaviour
             {
                 var shard = PoolManager.instance.GetBatteryShard();
                 shard.Spawn(transform.position);
+            }
+        }
+
+        StopAllCoroutines();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (moveTargetsRelativeToPlayer.Count > 0)
+        {
+            Gizmos.color = Color.blue;
+            var reference = player ? player.transform.position : Vector3.zero; 
+            for (int i = 0; i < moveTargetsRelativeToPlayer.Count; i++)
+            {
+                var p = moveTargetsRelativeToPlayer[i];
+                Gizmos.DrawSphere(reference + p, 0.2f);
             }
         }
     }

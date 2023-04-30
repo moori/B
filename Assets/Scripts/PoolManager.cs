@@ -11,6 +11,7 @@ public class PoolManager : MonoBehaviour
     public Pool explosionParticletPool;
     public Pool dummyEnemyPool;
     public Pool simpleEnemyPool;
+    public Pool stalkerEnemyPool;
     public Pool pulsePool;
     public Pool batteryPool;
     public Pool coinPool;
@@ -53,6 +54,10 @@ public class PoolManager : MonoBehaviour
     public Enemy GetSimpleEnemy()
     {
         return simpleEnemyPool.GetItem().GetComponent<Enemy>();
+    }
+    public Enemy GetStalkerEnemy()
+    {
+        return stalkerEnemyPool.GetItem().GetComponent<Enemy>();
     }
     public Pulse GetPulse()
     {
