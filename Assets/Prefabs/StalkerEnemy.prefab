@@ -578,6 +578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ae5eb8f0aaad64a8163faf3a9dae91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   hpColors: []
   facePlayer: 1
   turningSpeed: 1.5
@@ -597,6 +598,11 @@ MonoBehaviour:
   - {fileID: 4509008231910820354}
   - {fileID: 7300571690836379729}
   batteryLifetime: 5
+  pulseStartColor: {r: 1, g: 0, b: 0, a: 0}
+  pulseEndColor: {r: 1, g: 0, b: 0, a: 1}
+  pulseDuration: 1.4
+  pulseFromScale: 8
+  pulseToScale: 0.1
 --- !u!114 &4803745067534214794
 MonoBehaviour:
   m_ObjectHideFlags: 0

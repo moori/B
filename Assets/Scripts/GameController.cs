@@ -10,6 +10,11 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance;
 
+    [Header("Waves")]
+    public List<WaveData> waveDatas;
+    public WaveData currentWave;
+    public int waveNumber;
+
     [Header("Enemies")]
     public List<Enemy> enemiesAlive = new List<Enemy>();
     public int maxEnemies = 3;
@@ -85,18 +90,9 @@ public class GameController : MonoBehaviour
 
         var pos = UnityEngine.Random.insideUnitSphere * 8f;
         pos = new Vector3(Mathf.Clamp(pos.x, -8f, 8f), Mathf.Clamp(pos.y, -4f, 4f), 0);
-
-        var pulse = PoolManager.instance.GetPulse();
-        pulse.transform.position = pos;
-        pulse.StartPulse();
-        DOVirtual.DelayedCall(1f, () =>
-        {
-            var enemy = PoolManager.instance.GetSimpleEnemy();
-            enemy.transform.position = pos;
-
-            enemy.gameObject.SetActive(true);
-            enemiesAlive.Add(enemy);
-        });
+        var enemy = PoolManager.instance.GetSimpleEnemy();
+        enemy.Respawn(pos);
+        enemiesAlive.Add(enemy);
     }
 
     private void OnEnemyDeath(Enemy enemy)
@@ -192,5 +188,12 @@ public class GameController : MonoBehaviour
     public static Vector3 GetClosestPositionInsideBounds(Vector3 pos)
     {
         return new Vector3(Mathf.Clamp(pos.x, -HORIZONTAL_MOVEMENT_BOUND, HORIZONTAL_MOVEMENT_BOUND), Mathf.Clamp(pos.y, -VERTICAL_MOVEMENT_BOUND, VERTICAL_MOVEMENT_BOUND), 0);
+    }
+
+
+    public IEnumerator RuneWave(WaveData srcWaveData)
+    {
+        //currentWave=
+        yield return null;
     }
 }

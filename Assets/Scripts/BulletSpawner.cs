@@ -25,7 +25,7 @@ public class BulletSpawner : MonoBehaviour
 
     public IEnumerator FireAllRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         while (true)
         {
             for (int j = 0; j < volleysPerAttack; j++)

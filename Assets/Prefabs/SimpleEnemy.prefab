@@ -54,6 +54,7 @@ MonoBehaviour:
   volleysPerAttack: 1
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
+  angleError: 0
 --- !u!1 &1670797548452518876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,12 +1243,20 @@ MonoBehaviour:
   hpColors: []
   facePlayer: 1
   turningSpeed: 1.5
+  speed: 0
+  movePattern: 0
+  moveTargetsRelativeToPlayer: []
   coinAmount: 8
   batteryTimers:
   - {fileID: 2654463855793846825}
   - {fileID: 9157344770853222522}
   - {fileID: 3885298644880088699}
   batteryLifetime: 5
+  pulseStartColor: {r: 1, g: 0, b: 0, a: 0}
+  pulseEndColor: {r: 1, g: 0, b: 0, a: 1}
+  pulseDuration: 1.4
+  pulseFromScale: 8
+  pulseToScale: 0.1
 --- !u!114 &6408604097674909345
 MonoBehaviour:
   m_ObjectHideFlags: 0

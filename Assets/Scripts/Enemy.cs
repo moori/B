@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
+using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
+    public bool isActive;
     public Color[] hpColors;
     private HealthComponent healthComponent;
     private Player player;
@@ -23,6 +24,13 @@ public class Enemy : MonoBehaviour
     public int coinAmount;
     public List<BatteryTimer> batteryTimers = new List<BatteryTimer>();
     public float batteryLifetime;
+
+    [Header("Pulse")]
+    public Color pulseStartColor;
+    public Color pulseEndColor;
+    public float pulseDuration;
+    public float pulseFromScale;
+    public float pulseToScale;
 
     private System.Random rand;
 
@@ -92,14 +100,29 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void Enable()
     {
+        transform.localScale = Vector3.one;
+
         foreach (var batteryTimer in batteryTimers)
         {
             batteryTimer.Setup();
         }
         StepBatteryCounter();
         SetMovementPattern();
+    }
+
+    public void Respawn(Vector3 pos)
+    {
+        transform.localScale = Vector3.zero;
+        gameObject.SetActive(true);
+        var  p = PoolManager.instance.GetPulse();
+        transform.position = pos;
+        p.transform.position = pos;
+        p.StartPulse(pulseStartColor,pulseEndColor, pulseDuration, pulseFromScale, pulseToScale, ()=> {
+            isActive = true;
+            Enable();
+        });
     }
 
     public void StepBatteryCounter()

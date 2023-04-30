@@ -17,7 +17,17 @@ public class Pulse : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
     }
 
-    public void StartPulse()
+    public void StartPulse(Color startColor, Color endColor,float duration, float fromScale, float toScale, System.Action callback)
+    {
+        this.startColor = startColor;
+        this.endColor = endColor;
+        this.duration = duration;
+        this.fromScale = fromScale;
+        this.toScale = toScale;
+        StartPulse(callback);
+    }
+
+    public void StartPulse(System.Action callback)
     {
         //sprite.color = SetAlpha(sprite.color,0);
         //sprite.DOGradientColor(colorOverLifetime, duration);
@@ -28,6 +38,7 @@ public class Pulse : MonoBehaviour
         gameObject.SetActive(true);
         sprite.transform.DOScale(toScale, duration).OnComplete(()=> {
             gameObject.SetActive(false);
+            callback?.Invoke();
         });
     }
 
