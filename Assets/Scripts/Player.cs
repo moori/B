@@ -61,6 +61,12 @@ public class Player : MonoBehaviour
     public int coins = 0;
     public UnityEvent<int> OnCollectCoin;
 
+    [Header("Audio")]
+    public AudioSource fireSrc;
+    public AudioSource audidoSrc;
+    public AudioClip collectCoinClip;
+    public AudioClip damageClip;
+
     private void Awake()
     {
         for (int i = 0; i < lastMoveDirectionsAmount; i++)
@@ -142,6 +148,7 @@ public class Player : MonoBehaviour
     private void CollectCoin()
     {
         coins++;
+        audidoSrc.PlayOneShot(collectCoinClip);
         OnCollectCoin?.Invoke(coins);
     }
 
@@ -211,10 +218,20 @@ public class Player : MonoBehaviour
                 Shoot();
                 isShooting = true;
             }
+            if (!fireSrc.isPlaying)
+            {
+                fireSrc.DOKill();
+                fireSrc.volume = 0.8f;
+                fireSrc.Play();
+            }
         }
         else
         {
             isShooting = false;
+            if (fireSrc.isPlaying && !DOTween.IsTweening(fireSrc))
+            {
+                fireSrc.DOFade(0f, 0.1f).OnComplete(()=>{ fireSrc.Stop(); });
+            }
         }
     }
 
@@ -249,6 +266,10 @@ public class Player : MonoBehaviour
         if (ammo <= 0)
         {
             Die();
+        }
+        else
+        {
+            AudioManager.GetAudioSource().PlayOneShot(damageClip);
         }
     }
 

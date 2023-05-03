@@ -170,11 +170,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9118856c2f30d48b33accc51214db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 14
+  lifetime: 30
   modelTransform: {fileID: 4219508383754988405}
   rotateSpeed: 8
   shadowTransform: {fileID: 158900335729262750}
-  startScale: 1
+  startScale: 1.5
   endScale: 0
 --- !u!114 &4263618229898274240
 MonoBehaviour:

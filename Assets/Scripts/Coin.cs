@@ -18,6 +18,7 @@ public class Coin : MonoBehaviour
     public float startScale;
     public float endScale;
 
+
     private void Update()
     {
         if (!isActive) return;

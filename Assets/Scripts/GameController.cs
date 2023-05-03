@@ -41,6 +41,8 @@ public class GameController : MonoBehaviour
     public const float HORIZONTAL_MOVEMENT_BOUND = 11;
     public const float VERTICAL_MOVEMENT_BOUND = 5.5f;
 
+    private LevelController levelController;
+
     private void Awake()
     {
         if (instance == null)
@@ -54,6 +56,8 @@ public class GameController : MonoBehaviour
         rand = new System.Random();
 
         Bullet.OnBulletHit += OnBulletHit;
+
+        levelController = FindObjectOfType<LevelController>();
     }
 
     private void Update()
@@ -68,11 +72,12 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        for (int i = 0; i < maxEnemies; i++)
-        {
-            Spawn();
-            yield return new WaitForSeconds(0.66f);
-        }
+        //for (int i = 0; i < maxEnemies; i++)
+        //{
+        //    Spawn();
+        //    yield return new WaitForSeconds(0.66f);
+        //}
+        levelController.StartLevel();
 
         StartCoroutine(BatterySpawnerRoutine());
         UpdateScoreText(0);
@@ -97,6 +102,7 @@ public class GameController : MonoBehaviour
 
     private void OnEnemyDeath(Enemy enemy)
     {
+        return;
         enemiesAlive.Remove(enemy);
         DOVirtual.DelayedCall(6f, () =>
         {

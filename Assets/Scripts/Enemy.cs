@@ -34,6 +34,10 @@ public class Enemy : MonoBehaviour
 
     private System.Random rand;
 
+    [Header("Audio")]
+    public AudioClip spawnClip;
+    public AudioClip spawnPulseClip;
+    public AudioClip deathClip;
 
     public enum MovePattern
     {
@@ -119,9 +123,11 @@ public class Enemy : MonoBehaviour
         var  p = PoolManager.instance.GetPulse();
         transform.position = pos;
         p.transform.position = pos;
+        AudioManager.GetAudioSource().PlayOneShot(spawnPulseClip, 0.6f);
         p.StartPulse(pulseStartColor,pulseEndColor, pulseDuration, pulseFromScale, pulseToScale, ()=> {
             isActive = true;
             Enable();
+            AudioManager.GetAudioSource().PlayOneShot(spawnClip,0.75f);
         });
     }
 
@@ -136,7 +142,6 @@ public class Enemy : MonoBehaviour
 
     public void OnTakeDamage(int damage)
     {
-
     }
 
     public void Die()
@@ -168,6 +173,7 @@ public class Enemy : MonoBehaviour
         }
 
         StopAllCoroutines();
+        AudioManager.GetAudioSource().PlayOneShot(deathClip);
     }
 
     private void OnDrawGizmosSelected()

@@ -1240,6 +1240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ae5eb8f0aaad64a8163faf3a9dae91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   hpColors: []
   facePlayer: 1
   turningSpeed: 1.5
@@ -1257,6 +1258,9 @@ MonoBehaviour:
   pulseDuration: 1.4
   pulseFromScale: 8
   pulseToScale: 0.1
+  spawnClip: {fileID: 8300000, guid: 973cd0322cde53f41a377c9b0dc49854, type: 3}
+  spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
+  deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
 --- !u!114 &6408604097674909345
 MonoBehaviour:
   m_ObjectHideFlags: 0

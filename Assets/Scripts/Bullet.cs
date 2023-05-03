@@ -17,6 +17,9 @@ public class Bullet : MonoBehaviour
     public static System.Action OnBulletHit;
 
 
+    [Header("Audio")]
+    public AudioClip hitClip;
+
     public void Shoot(Vector3 direction)
     {
         gameObject.SetActive(true);
@@ -56,6 +59,7 @@ public class Bullet : MonoBehaviour
 
             gameObject.SetActive(false);
             OnBulletHit?.Invoke();
+            AudioManager.GetAudioSource().PlayOneShot(hitClip, 0.8f);
         }
 
     }
