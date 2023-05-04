@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
     private int shotsFiredBonus;
     public int firerateUpgradeRef=8;
     private int evenShots;
+    private Vector3 aimReference;
+    public float aimReferenceMagnitude;
 
     public UnityEvent<int> OnShoot;
     public UnityEvent<int,int> OnAmmoChange;
@@ -121,14 +123,17 @@ public class Player : MonoBehaviour
 
         healthComponent = GetComponent<HealthComponent>(); 
         SetShieldCounter();
+
+        aimReference = transform.position + (Vector3.up * aimReferenceMagnitude);
+
         //InvokeRepeating("Measure", 1f, 1f);
     }
 
 
     void Update()
     {
-        HandleMovement();
         HandleTurret();
+        HandleMovement();
         HandleBubble();
         HandleShot();
 
@@ -262,8 +267,28 @@ public class Player : MonoBehaviour
         transform.position = GameController.GetClosestPositionInsideBounds(pos);
     }
 
-    private void HandleTurret() {
-        if (isShooting) return;
+    private void HandleTurret()
+    {
+        if (isShooting) {
+            aimReference = turret.TransformPoint(Vector3.up * aimReferenceMagnitude*0.66f);
+            return; 
+        }
+
+        if (GameController.IsTouchingBounds(transform.position))
+        {
+            aimReference -= inputDir.normalized * speed * Time.deltaTime;
+        }
+
+        var cableVector = aimReference - transform.position;
+        if (cableVector.magnitude > aimReferenceMagnitude)
+        {
+            aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
+        }
+
+
+        turret.rotation = Quaternion.LookRotation(Vector3.forward, aimReference - transform.position);
+
+        return;
         if (PlayerInputs.Horizontal != 0 || PlayerInputs.Vertical != 0)
         {
             moveDirIndex = (moveDirIndex + 1) % lastMoveDirectionsAmount;
@@ -406,6 +431,10 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, coinAttractionRadius);
         Gizmos.DrawWireSphere(transform.position, coinCollectionRadius);
+
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(aimReference, 0.1f);
     }
 
     public void SetShieldCounter()
