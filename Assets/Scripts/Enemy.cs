@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
 
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
     public static System.Action<Enemy> OnEnemyDeath;
     public System.Action<float> OnHPChangePercent;
     public System.Action OnDie;
+    public UnityEvent OnRespawn;
 
     [Header("Movement")]
     public bool facePlayer;
@@ -130,6 +132,7 @@ public class Enemy : MonoBehaviour
             isActive = true;
             Enable();
             AudioManager.GetAudioSource().PlayOneShot(spawnClip,0.75f);
+            OnRespawn?.Invoke();
         });
     }
 

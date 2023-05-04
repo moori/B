@@ -32,6 +32,7 @@ public class BackColorController : MonoBehaviour
 
     public void SetIdle()
     {
+        sr.DOKill();
         sr.DOColor(idleGradient.Evaluate(0f), 1f).OnComplete(()=> { 
             sr.DOGradientColor(idleGradient, 9f).SetLoops(-1, LoopType.Restart);
         });
@@ -39,6 +40,10 @@ public class BackColorController : MonoBehaviour
 
     public void SetBoss()
     {
-        sr.DOGradientColor(bossGradient, 3f).SetLoops(-1, LoopType.Restart);
+        sr.DOKill();
+        sr.DOColor(bossGradient.Evaluate(0f), 0.3f).OnComplete(() =>
+        {
+            sr.DOGradientColor(bossGradient, 3f).SetLoops(-1, LoopType.Restart);
+        });
     }
 }

@@ -61,6 +61,7 @@ public class BulletSpawner : MonoBehaviour
         {
             bullet = PoolManager.instance.GetEnemyArrowBullet();
         }
+        if (bullet == null) return;
         bullet.transform.position = transform.position;
         bullet.Shoot(transform.TransformVector(direction));
     }

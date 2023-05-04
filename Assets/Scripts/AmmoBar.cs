@@ -7,6 +7,7 @@ using DG.Tweening;
 public class AmmoBar : MonoBehaviour
 {
     public List<Image> images;
+    public List<Image> baseImages;
     public Color lowHP;
     private Color currentColor;
     private bool isFlashing;
@@ -20,12 +21,15 @@ public class AmmoBar : MonoBehaviour
             Flash(Color.magenta, 0.6f);
     }
 
-    public void UpdateBar(float percent)
+    public void UpdateBar(int ammo, int maxAmmo)
     {
-        currentColor = percent <= .2f ? lowHP : Color.white;
+        currentColor = ammo <= Player.BASE_MAX_AMMO * .2f ? lowHP : Color.white;
         foreach (var item in images)
         {
-            item.fillAmount = percent;
+            item.fillAmount = ammo / (float)Player.ABSOLUTE_MAX_AMMO;
+        }
+        foreach (var item in baseImages)
+        {
             if (!isFlashing)
                 item.color = currentColor;
         }
@@ -35,7 +39,7 @@ public class AmmoBar : MonoBehaviour
     public void Flash(Color color, float duration)
     {
         isFlashing = true;
-        foreach (var item in images)
+        foreach (var item in baseImages)
         {
             item.DOColor(color, duration * 0.5f).OnComplete(() =>
             {

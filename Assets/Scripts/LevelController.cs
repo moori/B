@@ -10,9 +10,11 @@ public class LevelController : MonoBehaviour
     public int currentLevel = 0;
     public List<Enemy> enemiesAlive = new List<Enemy>();
     public List<Enemy> currentWaveEnemies = new List<Enemy>();
+    public List<Enemy> currentRandosEnemies = new List<Enemy>();
     public Enemy currentBoss;
 
     private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 4, 4, 4, 4, 5 };
+    private int[] maxConcurrentRandosPerLevelProgression = new int[] { 0, 0, 1, 2, 2, 2, 3, 4 };
 
     [Header("DBs")]
     public List<SpawnGroup> waveDB;
@@ -103,10 +105,11 @@ public class LevelController : MonoBehaviour
             {
                 //boss
                 Debug.Log("boss");
+                if (bossDB != null) return;
                 StartCoroutine(SpawnBossRoutine());
             }
         }
-        else
+        else if(currentBoss==null)
         {
             //check spawnRando
         }
@@ -207,14 +210,19 @@ public class LevelController : MonoBehaviour
     {
         var level = new LevelData();
         level.mainSequence = new List<SpawnGroup>();
-
-
-        for (int i = 0; i < wavesPerLevelProgression[levelIndex]; i++)
+        int waveProg = levelIndex <= wavesPerLevelProgression.Length - 1 ? wavesPerLevelProgression[levelIndex] : wavesPerLevelProgression.Last();
+        SpawnGroup lastPicked = null;
+        for (int i = 0; i < waveProg; i++)
         {
-            var w = waveDB.Where(x => x.minLevel <= levelIndex).ToList().GetRandom();
+            SpawnGroup w = waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom();
+            while (w == lastPicked)
+            {
+                w = waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel ).ToList().GetRandom();
+            }
+            lastPicked = w;
             level.mainSequence.Add(w);
         }
-        level.boss= bossDB.Where(x => x.minlevel <= levelIndex).ToList().GetRandom();
+        level.boss= bossDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom();
 
         return level;
     }
@@ -251,6 +259,6 @@ public class BossData
 {
     public Enemy boss;
     public Vector3 point;
-    public int minlevel;
-    public int maxlevel;
+    public int minLevel;
+    public int maxLevel;
 }

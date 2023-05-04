@@ -32,7 +32,7 @@ public class FillImageHelper : MonoBehaviour
         SetFill(amount , 0f);
     }
 
-    public void SetFill(float amount, float duration = 0f)
+    public void SetFill(float amount, float duration)
     {
         if (duration > 0)
         {

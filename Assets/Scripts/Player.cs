@@ -28,12 +28,14 @@ public class Player : MonoBehaviour
     public int lastMoveDirectionsAmount = 10;
     private int moveDirIndex = 0;
     private bool isShooting;
-    public int maxAmmo = 20000;
+    public static int BASE_MAX_AMMO = 500;
+    public static int ABSOLUTE_MAX_AMMO = 4000;
+    public int maxAmmo = 500;
     public int ammo;
     Collider2D[] hitsBuffer = new Collider2D[10];
 
     public UnityEvent<int> OnShoot;
-    public UnityEvent<float> OnAmmoChange;
+    public UnityEvent<int,int> OnAmmoChange;
     public UnityEvent<float> OnRecharge;
     public UnityEvent OnDie;
 
@@ -41,7 +43,6 @@ public class Player : MonoBehaviour
     public float bubbleRadius;
     public float bubbleDuration;
     public float shieldRechargeDuration;
-    public int unlockedShields => shieldCounters.Count(x => x.gameObject.activeInHierarchy);
     public bool isBubbling;
     public SpriteRenderer bubbleSprite;
     public SpriteRenderer bubbleShadowSprite;
@@ -72,6 +73,13 @@ public class Player : MonoBehaviour
     public AudioClip collectCoinClip;
     public AudioClip damageClip;
 
+
+    [Header("Upgrades")]
+    private float maxHPUpgradePercent = .2f;
+    public int maxHP_UpgradesUnlocked = 0;
+    public int fireRate_UpgradeUnlocks = 0;
+    public int bubbleSlot_UpgradeUnlocks = 0;
+
     private void Awake()
     {
         for (int i = 0; i < lastMoveDirectionsAmount; i++)
@@ -100,6 +108,12 @@ public class Player : MonoBehaviour
         {
             canTakeDamage = true;
         }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            UpgradeMaxHP();
+        }
+#endif
     }
 
     private void FixedUpdate()
@@ -112,6 +126,16 @@ public class Player : MonoBehaviour
         HandleFixedCoins();
     }
 
+    [ContextMenu("UpgradeMaxHP")]
+    public void UpgradeMaxHP()
+    {
+        maxHP_UpgradesUnlocked++;
+        maxAmmo = Mathf.RoundToInt( BASE_MAX_AMMO * (1f+ (maxHP_UpgradesUnlocked * maxHPUpgradePercent)));
+        maxAmmo = Mathf.Clamp(maxAmmo, BASE_MAX_AMMO, ABSOLUTE_MAX_AMMO);
+        Recharge(1f);
+    }
+
+
     private void HandleFixedBubble()
     {
         int numHits = Physics2D.OverlapCircleNonAlloc(transform.position, bubbleRadius, hitsBuffer, collectibleLayerMask.value);
@@ -119,7 +143,7 @@ public class Player : MonoBehaviour
         {
             if (hitsBuffer[i].gameObject.TryGetComponent<Battery>(out var battery))
             {
-                Recharge(battery.percentCharge);
+                Recharge(battery.percentCharge * BASE_MAX_AMMO/maxAmmo);
                 battery.Collect();
             }
 
@@ -166,7 +190,7 @@ public class Player : MonoBehaviour
     {
         ammo = Mathf.Clamp(ammo + Mathf.RoundToInt(maxAmmo * percent), 0, maxAmmo);
         OnRecharge?.Invoke(percent);
-        OnAmmoChange?.Invoke(ammo / (float)maxAmmo);
+        OnAmmoChange?.Invoke(ammo,maxAmmo);
     }
 
     private void HandleMovement()
@@ -228,7 +252,7 @@ public class Player : MonoBehaviour
                 Shoot();
                 isShooting = true;
             }
-            if (!fireSrc.isPlaying)
+            if (!fireSrc.isPlaying && ammo>0)
             {
                 fireSrc.DOKill();
                 fireSrc.volume = 0.8f;
@@ -255,8 +279,8 @@ public class Player : MonoBehaviour
         var shotDir = turret.transform.up + turret.transform.TransformVector(AddNoiseOnAngle(-minAngleError,minAngleError));
         b.Shoot(shotDir);
         OnShoot?.Invoke(1);
-        OnAmmoChange?.Invoke(ammo/(float)maxAmmo);
         ammo -= 1;
+        OnAmmoChange?.Invoke(ammo, maxAmmo);
     }
 
     public static Vector3 AddNoiseOnAngle(float min, float max)
@@ -273,7 +297,7 @@ public class Player : MonoBehaviour
         canTakeDamage = false;
         timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
-        Recharge(-.2f);
+        Recharge(-.2f *BASE_MAX_AMMO/maxAmmo);
         if (ammo <= 0)
         {
             Die();
