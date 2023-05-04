@@ -32,6 +32,11 @@ public class Battery : MonoBehaviour
         moveDirection = moveDir;
     }
 
+    public void SpawnBattery()
+    {
+        SpawnBattery(Vector3.zero);
+    }
+
     internal void Collect()
     {
         gameObject.SetActive(false);

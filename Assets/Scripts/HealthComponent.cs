@@ -11,6 +11,7 @@ public class HealthComponent : MonoBehaviour
     private HitTarget hitTarget;
 
     public UnityEvent OnDie;
+    public UnityEvent<float> OnTakeDamagePercent;
 
     private void Awake()
     {
@@ -42,5 +43,6 @@ public class HealthComponent : MonoBehaviour
         {
             OnDie?.Invoke();
         }
+        OnTakeDamagePercent?.Invoke(HP / (float) maxHP);
     }
 }

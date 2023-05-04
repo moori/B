@@ -55,6 +55,8 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
   angleError: 0
+  shootsBattery: 0
+  directionsAmount: 0
 --- !u!1 &1670797548452518876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,7 +1245,7 @@ MonoBehaviour:
   isActive: 0
   hpColors: []
   facePlayer: 1
-  turningSpeed: 1.5
+  turningSpeed: 2
   speed: 0
   movePattern: 0
   moveTargetsRelativeToPlayer: []
@@ -1372,6 +1374,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageMultiplier: 1
 --- !u!114 &6408604097674909347
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
     public int coins = 0;
     public UnityEvent<int> OnCollectCoin;
 
+    [Header("Health")]
+    public float timeLastDamage;
+    public float damageCooldown=1f;
+    private bool canTakeDamage;
+
     [Header("Audio")]
     public AudioSource fireSrc;
     public AudioSource audidoSrc;
@@ -90,6 +95,11 @@ public class Player : MonoBehaviour
         HandleTurret();
         HandleBubble();
         HandleShot();
+
+        if(Time.time-timeLastDamage >= damageCooldown)
+        {
+            canTakeDamage = true;
+        }
     }
 
     private void FixedUpdate()
@@ -259,8 +269,9 @@ public class Player : MonoBehaviour
 
     public void TakeHit(int damage)
     {
-        if (isBubbling) return;
-
+        if (isBubbling || !canTakeDamage) return;
+        canTakeDamage = false;
+        timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
         Recharge(-.2f);
         if (ammo <= 0)

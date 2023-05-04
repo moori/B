@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
     private Player player;
 
     public static System.Action<Enemy> OnEnemyDeath;
+    public System.Action<float> OnHPChangePercent;
+    public System.Action OnDie;
 
     [Header("Movement")]
     public bool facePlayer;
@@ -66,7 +68,7 @@ public class Enemy : MonoBehaviour
     {
         if (facePlayer)
         {
-            transform.up = Vector3.Lerp(transform.up, player.transform.position - transform.position, turningSpeed * Time.deltaTime);
+            transform.up = Vector3.Lerp(transform.up, (player.transform.position - transform.position).normalized, turningSpeed * Time.deltaTime);
         }
 
     }
@@ -142,6 +144,7 @@ public class Enemy : MonoBehaviour
 
     public void OnTakeDamage(int damage)
     {
+        OnHPChangePercent?.Invoke(healthComponent.HP / (float)healthComponent.maxHP);
     }
 
     public void Die()

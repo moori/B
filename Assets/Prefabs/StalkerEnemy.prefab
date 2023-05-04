@@ -137,6 +137,8 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0.25
   angleError: 1
+  shootsBattery: 0
+  directionsAmount: 0
 --- !u!1 &2442865062192642077
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +583,7 @@ MonoBehaviour:
   isActive: 0
   hpColors: []
   facePlayer: 1
-  turningSpeed: 1.5
+  turningSpeed: 2
   speed: 3.5
   movePattern: 1
   moveTargetsRelativeToPlayer:
@@ -603,6 +605,9 @@ MonoBehaviour:
   pulseDuration: 1.4
   pulseFromScale: 8
   pulseToScale: 0.1
+  spawnClip: {fileID: 0}
+  spawnPulseClip: {fileID: 0}
+  deathClip: {fileID: 0}
 --- !u!114 &4803745067534214794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +695,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageMultiplier: 1
 --- !u!114 &4803745067534214792
 MonoBehaviour:
   m_ObjectHideFlags: 0

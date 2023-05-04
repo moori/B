@@ -12,6 +12,12 @@ public class BulletSpawner : MonoBehaviour
     public float delayBetweenVolleys = 0f;
     public float angleError = 0f;
 
+    [Header("Battery")]
+    public bool shootsBattery;
+
+    [Header("Generator")]
+    public int directionsAmount;
+
     enum AttackType
     {
         FireAll,
@@ -34,9 +40,11 @@ public class BulletSpawner : MonoBehaviour
                 for (int i = 0; i < fireLocalDirections.Count; i++)
                 {
                     Shoot(fireLocalDirections[i] + Player.AddNoiseOnAngle(-angleError,angleError));
-                    yield return new WaitForSeconds(delayBetweenShots);
+                    if(delayBetweenShots>0)
+                        yield return new WaitForSeconds(delayBetweenShots);
                 }
-                yield return new WaitForSeconds(delayBetweenVolleys);
+                if (delayBetweenVolleys > 0)
+                    yield return new WaitForSeconds(delayBetweenVolleys);
             }
             yield return new WaitForSeconds(delayBetweenAttacks);
         }
@@ -44,7 +52,15 @@ public class BulletSpawner : MonoBehaviour
 
     public void Shoot(Vector3 direction)
     {
-        var bullet = PoolManager.instance.GetEnemyArrowBullet();
+        Bullet bullet = null;
+        if (shootsBattery)
+        {
+            bullet = PoolManager.instance.GetEnemyBatteryBullet();
+        }
+        else
+        {
+            bullet = PoolManager.instance.GetEnemyArrowBullet();
+        }
         bullet.transform.position = transform.position;
         bullet.Shoot(transform.TransformVector(direction));
     }
@@ -55,7 +71,23 @@ public class BulletSpawner : MonoBehaviour
         for (int i = 0; i < fireLocalDirections.Count; i++)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + fireLocalDirections[i]);
+            Gizmos.DrawLine(transform.position, transform.position + transform.TransformVector(fireLocalDirections[i]*3));
         }
+    }
+
+    [ContextMenu("GenerateDirection")]
+    public void GenerateDirection()
+    {
+        fireLocalDirections.Clear();
+        for (int i = 0; i < directionsAmount; i++)
+        {
+            fireLocalDirections.Add(new Vector3(Mathf.Cos((i * (360f / directionsAmount)) * Mathf.Deg2Rad), Mathf.Sin((i * (360f / directionsAmount)) * Mathf.Deg2Rad),0));
+        }    
+    }
+    [ContextMenu("InvertDirection")]
+
+    public void InvertDirection()
+    {
+        fireLocalDirections.Reverse();
     }
 }

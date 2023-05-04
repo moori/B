@@ -8,6 +8,7 @@ public class PoolManager : MonoBehaviour
     public Pool hitParticlePool;
     public Pool playerBulletPool;
     public Pool enemyArrowBulletPool;
+    public Pool enemyBatteryBulletPool;
     public Pool explosionParticletPool;
     public Pool dummyEnemyPool;
     public Pool simpleEnemyPool;
@@ -42,6 +43,10 @@ public class PoolManager : MonoBehaviour
     public Bullet GetEnemyArrowBullet()
     {
         return enemyArrowBulletPool.GetItem().GetComponent<Bullet>();
+    }
+    public Bullet GetEnemyBatteryBullet()
+    {
+        return enemyBatteryBulletPool.GetItem().GetComponent<Bullet>();
     }
     public ParticleSystem GetExplosionParticles()
     {

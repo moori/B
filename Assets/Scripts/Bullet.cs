@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Bullet : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Bullet : MonoBehaviour
     Collider2D[] hitsBuffer = new Collider2D[1];
 
     public static System.Action OnBulletHit;
-
+    public UnityEvent OnBulletSpawn;
 
     [Header("Audio")]
     public AudioClip hitClip;
@@ -26,6 +27,7 @@ public class Bullet : MonoBehaviour
         transform.up = direction;
         isDead = false; 
         startTime = Time.time;
+        OnBulletSpawn?.Invoke();
     }
 
     public void Kill()

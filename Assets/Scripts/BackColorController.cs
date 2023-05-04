@@ -5,13 +5,24 @@ using DG.Tweening;
 
 public class BackColorController : MonoBehaviour
 {
+    public static BackColorController instance;
+
     public Gradient idleGradient;
     public Gradient bossGradient;
     private SpriteRenderer sr;
 
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
         sr = GetComponent<SpriteRenderer>();
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 
     public void Start()

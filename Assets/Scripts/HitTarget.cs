@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +7,10 @@ public class HitTarget : MonoBehaviour
 {
 
     public UnityEvent<int> OnHit;
+    public float damageMultiplier=1f;
 
     public void Hit(int damage)
     {
-        OnHit?.Invoke(damage);
+        OnHit?.Invoke(Mathf.RoundToInt(damage*damageMultiplier));
     }
 }

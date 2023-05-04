@@ -10,6 +10,7 @@ public class LevelController : MonoBehaviour
     public int currentLevel = 0;
     public List<Enemy> enemiesAlive = new List<Enemy>();
     public List<Enemy> currentWaveEnemies = new List<Enemy>();
+    public Enemy currentBoss;
 
     private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 4, 4, 4, 4, 5 };
 
@@ -23,10 +24,15 @@ public class LevelController : MonoBehaviour
     private Coroutine waveTimer;
     private bool waveExpired;
 
+    [Header("UI")]
+    public FillImageHelper bossHPBar;
+
     private void Awake()
     {
         rand = new System.Random();
         Enemy.OnEnemyDeath += OnEnemyDeath;
+
+        PrespawnBosses();
     }
 
     private void OnDestroy()
@@ -35,8 +41,34 @@ public class LevelController : MonoBehaviour
         Enemy.OnEnemyDeath -= OnEnemyDeath;
     }
 
+    private void Update()
+    {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log($"killing {enemiesAlive.Count} enemies");
+            for (int i = enemiesAlive.Count - 1; i >= 0; i--)
+            {
+
+                enemiesAlive[i].Die();
+            }
+        }
+#endif
+    }
+
+    public void PrespawnBosses()
+    {
+        foreach (var b in bossDB)
+        {
+            b.boss = Instantiate<Enemy>(b.boss);
+            b.boss.transform.SetParent(transform);
+            b.boss.gameObject.SetActive(false);
+        }
+    }
+
     public void StartLevel()
     {
+        BackColorController.instance.SetIdle();
         if (levelData == null)
         {
             levelData = CreateLevel(currentLevel);
@@ -48,6 +80,8 @@ public class LevelController : MonoBehaviour
         }
 
         enemiesAlive.Clear();
+        currentBoss = null;
+        currentWaveEnemies.Clear();
 
         StartCoroutine(SpawnGroupRoutine(levelData.GetNextWave()));
     }
@@ -69,12 +103,28 @@ public class LevelController : MonoBehaviour
             {
                 //boss
                 Debug.Log("boss");
+                StartCoroutine(SpawnBossRoutine());
             }
         }
         else
         {
             //check spawnRando
         }
+    }
+
+    private IEnumerator SpawnBossRoutine()
+    {
+        BackColorController.instance.SetBoss();
+        bossHPBar.Show();
+        yield return new WaitForSeconds(0.5f);
+        bossHPBar.SetFill(1f, 1f);
+        yield return new WaitForSeconds(3f);
+
+        //var boss = Instantiate<Enemy>(levelData.boss.boss, levelData.boss.point, Quaternion.identity);
+        var boss = levelData.boss.boss;
+        boss.OnHPChangePercent += bossHPBar.SetFill;
+        boss.Respawn(levelData.boss.point);
+        currentBoss = boss;
     }
 
     private IEnumerator WaveDurationRoutine(float duration)
@@ -135,7 +185,22 @@ public class LevelController : MonoBehaviour
             currentWaveEnemies.Remove(enemy);
         }
 
+        if(enemy == currentBoss)
+        {
+            StartCoroutine( EndLevel());
+            return;
+        }
+
         EvaluateWave();
+    }
+
+    public IEnumerator EndLevel()
+    {
+        BackColorController.instance.SetIdle();
+        yield return new WaitForSeconds(2f);
+        bossHPBar.Hide();
+        yield return new WaitForSeconds(2f);
+        StartLevel();
     }
 
     public LevelData CreateLevel(int levelIndex)
@@ -146,9 +211,10 @@ public class LevelController : MonoBehaviour
 
         for (int i = 0; i < wavesPerLevelProgression[levelIndex]; i++)
         {
-            var w = waveDB.Where(x => x.minLevel >= levelIndex).ToList().GetRandom();
+            var w = waveDB.Where(x => x.minLevel <= levelIndex).ToList().GetRandom();
             level.mainSequence.Add(w);
         }
+        level.boss= bossDB.Where(x => x.minlevel <= levelIndex).ToList().GetRandom();
 
         return level;
     }
@@ -180,7 +246,11 @@ public class LevelData
     }
 }
 
+[System.Serializable]
 public class BossData
 {
     public Enemy boss;
+    public Vector3 point;
+    public int minlevel;
+    public int maxlevel;
 }
