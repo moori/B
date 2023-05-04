@@ -238,6 +238,11 @@ public class GameController : MonoBehaviour
         return new Vector3(Mathf.Clamp(pos.x, -HORIZONTAL_MOVEMENT_BOUND, HORIZONTAL_MOVEMENT_BOUND), Mathf.Clamp(pos.y, -VERTICAL_MOVEMENT_BOUND, VERTICAL_MOVEMENT_BOUND), 0);
     }
 
+    public static bool IsTouchingBounds(Vector3 pos)
+    {
+        return Mathf.Abs(pos.x) >= HORIZONTAL_MOVEMENT_BOUND || Mathf.Abs(pos.y) >= VERTICAL_MOVEMENT_BOUND;
+    }
+
 
     public IEnumerator RuneWave(WaveData srcWaveData)
     {

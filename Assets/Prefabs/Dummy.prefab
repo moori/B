@@ -188,7 +188,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ae5eb8f0aaad64a8163faf3a9dae91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   hpColors: []
+  OnRespawn:
+    m_PersistentCalls:
+      m_Calls: []
+  facePlayer: 0
+  turningSpeed: 0
+  speed: 0
+  movePattern: 0
+  moveTargetsRelativeToPlayer: []
+  coinAmount: 0
+  batteryTimers: []
+  batteryLifetime: 0
+  pulseStartColor: {r: 0, g: 0, b: 0, a: 0}
+  pulseEndColor: {r: 0, g: 0, b: 0, a: 0}
+  pulseDuration: 0
+  pulseFromScale: 0
+  pulseToScale: 0
+  spawnClip: {fileID: 0}
+  spawnPulseClip: {fileID: 0}
+  deathClip: {fileID: 0}
 --- !u!114 &827211252495853078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +236,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageMultiplier: 1
 --- !u!114 &827211252495853076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,5 +252,8 @@ MonoBehaviour:
   maxHP: 50
   HP: 0
   OnDie:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeDamagePercent:
     m_PersistentCalls:
       m_Calls: []
