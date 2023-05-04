@@ -28,6 +28,11 @@ public class GameController : MonoBehaviour
 
     [Header("GameOver")]
     public GameObject gameoverScreen;
+    public TextMeshProUGUI finalScore;
+    public TextMeshProUGUI newBest;
+    public TextMeshProUGUI bestScore;
+    public TextMeshProUGUI restart;
+    private bool canRestart;
 
     [Header("Score")]
     public TextMeshProUGUI scoreText;
@@ -66,10 +71,16 @@ public class GameController : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (canRestart && Input.anyKeyDown)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
     private IEnumerator Start()
     {
+        gameoverScreen.SetActive(false);
         yield return new WaitForSeconds(2f);
 
         //for (int i = 0; i < maxEnemies; i++)
@@ -121,15 +132,46 @@ public class GameController : MonoBehaviour
                 weapon.gameObject.SetActive(false);
             }
         }
+        StartCoroutine(GameOverRoutine());
+    }
 
-        DOVirtual.DelayedCall(1f, () =>
+    private IEnumerator GameOverRoutine()
+    {
+        var savedBest = PlayerPrefs.GetInt("bestScore", 0);
+;       yield return new WaitForSeconds(1f);
+
+        gameoverScreen.SetActive(true);
+        finalScore.gameObject.SetActive(false);
+        newBest.gameObject.SetActive(false);
+        bestScore.gameObject.SetActive(false);
+        restart.gameObject.SetActive(false);
+
+
+        yield return new WaitForSeconds(1f);
+        finalScore.gameObject.SetActive(true);
+        var ss = 0;
+        var elapsedTime = 0f;
+        while (ss<score)
         {
-            gameoverScreen.SetActive(true);
-        });
-        DOVirtual.DelayedCall(5f, () =>
+            ss = Mathf.RoundToInt( Mathf.Lerp(0, score, elapsedTime / 1.5f));
+            elapsedTime += Time.deltaTime;
+            finalScore.text = $"final score\n{string.Format("{0:000000000}", ss)}";
+            yield return new WaitForEndOfFrame();
+        }
+
+        newBest.gameObject.SetActive(score>savedBest);
+
+        if (score > savedBest)
         {
-            SceneManager.LoadScene(0);
-        });
+            PlayerPrefs.SetInt("bestScore", score);
+            savedBest = PlayerPrefs.GetInt("bestScore", 0);
+        }
+        bestScore.text = $"best score\n{string.Format("{0:000000000}",savedBest)}";
+        bestScore.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+        restart.gameObject.SetActive(true);
+        canRestart = true;
     }
 
     public IEnumerator BatterySpawnerRoutine()

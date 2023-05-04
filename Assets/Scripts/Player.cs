@@ -20,7 +20,10 @@ public class Player : MonoBehaviour
 
     [Header("Weapon")]
     //public BulletPool bulletPool;
-    public float delayBetweenShots;
+    public float delayBetweenShots; //0.0375f
+    public static float BASE_INV_FIRERATE = 0.05f;
+    public static int MAX_FIRERATE_UNLOCKS = 5;
+    public static float INV_FIRERATE_UPGRADE_FACTOR = 0.8f;
     private float timeLastShot;
     public float minAngleError = 15;
     public Transform turret;
@@ -33,6 +36,10 @@ public class Player : MonoBehaviour
     public int maxAmmo = 500;
     public int ammo;
     Collider2D[] hitsBuffer = new Collider2D[10];
+    public int shotsFiredLastSecond;
+    private int shotsFiredBonus;
+    public int firerateUpgradeRef=8;
+    private int evenShots;
 
     public UnityEvent<int> OnShoot;
     public UnityEvent<int,int> OnAmmoChange;
@@ -41,6 +48,25 @@ public class Player : MonoBehaviour
 
     [Header("Bubble")]
     public float bubbleRadius;
+
+    internal void ApplyUpgrade(UpgradeShip.UpgradeType upgradeType)
+    {
+        switch (upgradeType)
+        {
+            case UpgradeShip.UpgradeType.Firerate:
+                UpgradeFirerate();
+                break;
+            case UpgradeShip.UpgradeType.MaxHP:
+                UpgradeMaxHP();
+                break;
+            case UpgradeShip.UpgradeType.ShieldSlot:
+                UpgradeShield();
+                break;
+            default:
+                break;
+        }
+    }
+
     public float bubbleDuration;
     public float shieldRechargeDuration;
     public bool isBubbling;
@@ -78,7 +104,7 @@ public class Player : MonoBehaviour
     private float maxHPUpgradePercent = .2f;
     public int maxHP_UpgradesUnlocked = 0;
     public int fireRate_UpgradeUnlocks = 0;
-    public int bubbleSlot_UpgradeUnlocks = 0;
+    public int bubbleSlot_UpgradeUnlocks = 1;
 
     private void Awake()
     {
@@ -91,11 +117,13 @@ public class Player : MonoBehaviour
         bubbleSprite.transform.localScale = Vector3.zero;
 
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 90;
 
         healthComponent = GetComponent<HealthComponent>(); 
         SetShieldCounter();
+        //InvokeRepeating("Measure", 1f, 1f);
     }
+
 
     void Update()
     {
@@ -113,7 +141,20 @@ public class Player : MonoBehaviour
         {
             UpgradeMaxHP();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            UpgradeFirerate();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            UpgradeShield();
+        }
 #endif
+    }
+    public void Measure()
+    {
+        Debug.Log(shotsFiredLastSecond);
+        shotsFiredLastSecond = 0;
     }
 
     private void FixedUpdate()
@@ -130,9 +171,25 @@ public class Player : MonoBehaviour
     public void UpgradeMaxHP()
     {
         maxHP_UpgradesUnlocked++;
-        maxAmmo = Mathf.RoundToInt( BASE_MAX_AMMO * (1f+ (maxHP_UpgradesUnlocked * maxHPUpgradePercent)));
+        maxAmmo = Mathf.RoundToInt(BASE_MAX_AMMO * (1f + (maxHP_UpgradesUnlocked * maxHPUpgradePercent)));
         maxAmmo = Mathf.Clamp(maxAmmo, BASE_MAX_AMMO, ABSOLUTE_MAX_AMMO);
         Recharge(1f);
+    }
+
+    [ContextMenu("UpgradeFirerate")]
+    public void UpgradeFirerate()
+    {
+        fireRate_UpgradeUnlocks = Mathf.Clamp(fireRate_UpgradeUnlocks + 1, 0, 5);
+    }
+    [ContextMenu("UpgradeShield")]
+    public void UpgradeShield()
+    {
+        bubbleSlot_UpgradeUnlocks = Mathf.Clamp(bubbleSlot_UpgradeUnlocks + 1, 1, shieldCounters.Count-1);
+
+        for (int i = 1; i < bubbleSlot_UpgradeUnlocks+1; i++)
+        {
+            shieldCounters[i].gameObject.SetActive(true);
+        }
     }
 
 
@@ -251,6 +308,24 @@ public class Player : MonoBehaviour
             {
                 Shoot();
                 isShooting = true;
+
+                evenShots++;
+                if (evenShots >= 2)
+                {
+                    evenShots = 0;
+                    Shoot();
+                }
+
+                //bonus
+                shotsFiredBonus++;
+                if(shotsFiredBonus >= 5)
+                {
+                    shotsFiredBonus = 0;
+                    for (int i = 0; i < fireRate_UpgradeUnlocks; i++)
+                    {
+                        Shoot();
+                    }
+                }
             }
             if (!fireSrc.isPlaying && ammo>0)
             {
@@ -281,6 +356,8 @@ public class Player : MonoBehaviour
         OnShoot?.Invoke(1);
         ammo -= 1;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
+
+        shotsFiredLastSecond++;
     }
 
     public static Vector3 AddNoiseOnAngle(float min, float max)

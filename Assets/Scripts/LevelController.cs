@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using TMPro;
+using DG.Tweening;
 
 public class LevelController : MonoBehaviour
 {
@@ -28,18 +30,22 @@ public class LevelController : MonoBehaviour
 
     [Header("UI")]
     public FillImageHelper bossHPBar;
+    public TextMeshPro levelText;
+
+    [Header("UpgradePhase")]
+    public List<UpgradeShip> upgradeShips;
 
     private void Awake()
     {
         rand = new System.Random();
         Enemy.OnEnemyDeath += OnEnemyDeath;
 
+        levelText.DOFade(0f, 0f);
         PrespawnBosses();
     }
 
     private void OnDestroy()
     {
-
         Enemy.OnEnemyDeath -= OnEnemyDeath;
     }
 
@@ -86,6 +92,12 @@ public class LevelController : MonoBehaviour
         currentWaveEnemies.Clear();
 
         StartCoroutine(SpawnGroupRoutine(levelData.GetNextWave()));
+
+        levelText.text = $"level {string.Format("{0:00}", currentLevel+1)}";
+        levelText.DOFade(0f, 0f);
+        levelText.DOFade(1f, 0.2f).OnComplete(() => {
+            levelText.DOFade(0f, 0.2f).SetDelay(3f);
+        });
     }
 
     private void EvaluateWave()
@@ -105,7 +117,6 @@ public class LevelController : MonoBehaviour
             {
                 //boss
                 Debug.Log("boss");
-                if (bossDB != null) return;
                 StartCoroutine(SpawnBossRoutine());
             }
         }
@@ -113,6 +124,23 @@ public class LevelController : MonoBehaviour
         {
             //check spawnRando
         }
+    }
+
+    public void StartUpgradePhase()
+    {
+        foreach (var uShip in upgradeShips)
+        {
+            uShip.Show();
+        }
+    }
+
+    public void FinishUpgradePhase()
+    {
+        foreach (var uShip in upgradeShips)
+        {
+            uShip.Hide();
+        }
+        StartLevel();
     }
 
     private IEnumerator SpawnBossRoutine()
@@ -203,7 +231,7 @@ public class LevelController : MonoBehaviour
         yield return new WaitForSeconds(2f);
         bossHPBar.Hide();
         yield return new WaitForSeconds(2f);
-        StartLevel();
+        StartUpgradePhase();
     }
 
     public LevelData CreateLevel(int levelIndex)
