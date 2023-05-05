@@ -12,6 +12,7 @@ public class PlayerInputs : MonoBehaviour
 
     private void Update()
     {
+        if (GameController.IsGamePaused) return;
         Fire = Input.GetButton("Fire") || Input.GetButton("Fire1");
         Bubble = Input.GetButton("Bubble") || Input.GetButton("Fire2");
         Slow = Input.GetButton("Slow") || Input.GetButton("Fire3");

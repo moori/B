@@ -105,8 +105,11 @@ public class Player : MonoBehaviour
     [Header("Upgrades")]
     private float maxHPUpgradePercent = .2f;
     public int maxHP_UpgradesUnlocked = 0;
+    public static int max_maxHP_UpgradesUnlocked = 8;
     public int fireRate_UpgradeUnlocks = 0;
+    public static int max_fireRate_UpgradeUnlocks = 5;
     public int bubbleSlot_UpgradeUnlocks = 1;
+    public static int max_bubbleSlot_UpgradeUnlocks = 5;
 
     private void Awake()
     {

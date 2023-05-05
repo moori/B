@@ -11,10 +11,22 @@ public class Pulse : MonoBehaviour
     public float duration;
     public float fromScale;
     public float toScale;
+    [Header("menu")]
+    public bool isRepeat;
 
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+
+        if (isRepeat)
+        {
+            PulseRepeat();
+        }
+    }
+
+    public void PulseRepeat()
+    {
+        StartPulse(PulseRepeat);
     }
 
     public void StartPulse(Color startColor, Color endColor,float duration, float fromScale, float toScale, System.Action callback)
@@ -27,7 +39,7 @@ public class Pulse : MonoBehaviour
         StartPulse(callback);
     }
 
-    public void StartPulse(System.Action callback)
+    public void StartPulse(System.Action callback = null)
     {
         //sprite.color = SetAlpha(sprite.color,0);
         //sprite.DOGradientColor(colorOverLifetime, duration);

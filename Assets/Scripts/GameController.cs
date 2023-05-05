@@ -48,6 +48,12 @@ public class GameController : MonoBehaviour
 
     private LevelController levelController;
 
+    [Header("UI")]
+    public PauseMenu pauseMenu;
+    public RenamePanel renamePanel;
+
+    public static bool IsGamePaused;
+
     private void Awake()
     {
         if (instance == null)
@@ -67,14 +73,16 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         if (canRestart && Input.anyKeyDown)
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene("Game");
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameController.IsGamePaused)
+        {
+            pauseMenu.Pause();
+            return;
         }
     }
 
@@ -114,12 +122,6 @@ public class GameController : MonoBehaviour
     private void OnEnemyDeath(Enemy enemy)
     {
         return;
-        enemiesAlive.Remove(enemy);
-        DOVirtual.DelayedCall(6f, () =>
-        {
-            Spawn();
-        });
-
     }
 
     public void GameOver()
@@ -137,7 +139,6 @@ public class GameController : MonoBehaviour
 
     private IEnumerator GameOverRoutine()
     {
-        var savedBest = PlayerPrefs.GetInt("bestScore", 0);
 ;       yield return new WaitForSeconds(1f);
 
         gameoverScreen.SetActive(true);
@@ -159,14 +160,18 @@ public class GameController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        newBest.gameObject.SetActive(score>savedBest);
+        newBest.gameObject.SetActive(score>HighScoreManager.GetBestScore());
 
-        if (score > savedBest)
+        if (score > HighScoreManager.GetBestScore())
         {
-            PlayerPrefs.SetInt("bestScore", score);
-            savedBest = PlayerPrefs.GetInt("bestScore", 0);
+            HighScoreManager.SetBestScore(score);
+            var waiting = true;
+            renamePanel.Show();
+            renamePanel.OnRenameComplete = () => waiting = false;
+            yield return new WaitUntil(()=>!waiting);
+            HighScoreManager.SendHighscore(score);
         }
-        bestScore.text = $"best score\n{string.Format("{0:000000000}",savedBest)}";
+        bestScore.text = $"best score\n{string.Format("{0:000000000}",HighScoreManager.GetBestScore())}";
         bestScore.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(2f);

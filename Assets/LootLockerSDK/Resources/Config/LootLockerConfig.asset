@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 182cd195a28310e479cddf7ff82822f8, type: 3}
   m_Name: LootLockerConfig
   m_EditorClassIdentifier: 
-  apiKey: dev_61a740f7b1d34dafaff03172f7a64367
-  token: 
+  apiKey: prod_574da063776043229b9a2d1479e41457
+  token: d508a228bf10f3efb6e0ca063f94cffde1361a3a
   adminToken: 
   refreshToken: 
-  domainKey: https://ue273hnx.api.lootlocker.io/
+  domainKey: ue273hnx
   gameID: 0
   game_version: 1.0.0.0
-  deviceID: defaultPlayerId
+  deviceID: 5622eab3-c2dd-4709-a777-c2f224bfe348
   platform: 4
   developmentMode: 1
   url: https://api.lootlocker.io/v1
-  adminUrl: https://https://ue273hnx.api.lootlocker.io/.api.lootlocker.io/admin
-  playerUrl: https://https://ue273hnx.api.lootlocker.io/.api.lootlocker.io/player
-  userUrl: https://https://ue273hnx.api.lootlocker.io/.api.lootlocker.io/game
-  baseUrl: https://https://ue273hnx.api.lootlocker.io/.api.lootlocker.io
+  adminUrl: https://ue273hnx.api.lootlocker.io/admin
+  playerUrl: https://ue273hnx.api.lootlocker.io/player
+  userUrl: https://ue273hnx.api.lootlocker.io/game
+  baseUrl: https://ue273hnx.api.lootlocker.io
   clientSideRequestTimeOut: 5
   currentDebugLevel: 0
-  allowTokenRefresh: 1
+  allowTokenRefresh: 0
