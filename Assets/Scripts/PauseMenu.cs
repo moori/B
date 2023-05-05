@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     public TextMeshProUGUI fireRateText;
     public TextMeshProUGUI maxHPText;
     public TextMeshProUGUI shieldSlotText;
+    public TextMeshProUGUI missileText;
 
     private Player player;
 
@@ -43,6 +44,7 @@ public class PauseMenu : MonoBehaviour
         fireRateText.text = $"fire rate: {player.fireRate_UpgradeUnlocks}/{Player.max_fireRate_UpgradeUnlocks}";
         maxHPText.text = $"max hp: {player.maxHP_UpgradesUnlocked}/{Player.max_maxHP_UpgradesUnlocked}";
         shieldSlotText.text = $"shield slots: {player.bubbleSlot_UpgradeUnlocks}/{Player.max_bubbleSlot_UpgradeUnlocks}";
+        missileText.text = $"missiles: {player.missile_UpgradeUnlocks}/{Player.max_missile_UpgradeUnlocks}";
     }
 
     public void OnClickResume()

@@ -160,7 +160,6 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
         OnEnemyDeath?.Invoke(this);
 
-        Debug.Log($"Kill enemny {gameObject.name}. Spawn {coinAmount} coins.");
         //coin
         for (int i = 0; i < coinAmount; i++)
         {

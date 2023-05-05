@@ -33,7 +33,7 @@ public class LevelController : MonoBehaviour
     public TextMeshPro levelText;
 
     [Header("UpgradePhase")]
-    public List<UpgradeShip> upgradeShips;
+    public UpgradePhaseController upgradePhaseController;
 
     private void Awake()
     {
@@ -66,6 +66,13 @@ public class LevelController : MonoBehaviour
             {
 
                 enemiesAlive[i].Die();
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            foreach (var item in FindObjectsOfType<Enemy>())
+            {
+                item.GetComponent<HealthComponent>().HP = 1;
             }
         }
 #endif
@@ -132,23 +139,6 @@ public class LevelController : MonoBehaviour
         {
             //check spawnRando
         }
-    }
-
-    public void StartUpgradePhase()
-    {
-        foreach (var uShip in upgradeShips)
-        {
-            uShip.Show();
-        }
-    }
-
-    public void FinishUpgradePhase()
-    {
-        foreach (var uShip in upgradeShips)
-        {
-            uShip.Hide();
-        }
-        StartLevel();
     }
 
     private IEnumerator SpawnBossRoutine()
@@ -239,8 +229,8 @@ public class LevelController : MonoBehaviour
         BackColorController.instance.SetIdle();
         yield return new WaitForSeconds(2f);
         bossHPBar.Hide();
-        yield return new WaitForSeconds(2f);
-        StartUpgradePhase();
+        yield return new WaitForSeconds(1f);
+        upgradePhaseController.StartUpgradePhase();
     }
 
     public LevelData CreateLevel(int levelIndex)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class Util
 {
+    private static System.Random rng = new System.Random();
     public static void DelayAction (this MonoBehaviour mb, float delay, System.Action onComplete)
     {
         mb.StartCoroutine(DelayActionRoutine(delay, onComplete));
@@ -34,5 +35,18 @@ public static class Util
     {
         if (list == null) return default(T);
         return list[UnityEngine.Random.Range(0, list.Count)];
+    }
+
+    public static void Shuffle<T>(this IList<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }

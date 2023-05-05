@@ -22,7 +22,6 @@ public class Player : MonoBehaviour
     //public BulletPool bulletPool;
     public float delayBetweenShots; //0.0375f
     public static float BASE_INV_FIRERATE = 0.05f;
-    public static int MAX_FIRERATE_UNLOCKS = 5;
     public static float INV_FIRERATE_UPGRADE_FACTOR = 0.8f;
     private float timeLastShot;
     public float minAngleError = 15;
@@ -32,7 +31,7 @@ public class Player : MonoBehaviour
     private int moveDirIndex = 0;
     private bool isShooting;
     public static int BASE_MAX_AMMO = 500;
-    public static int ABSOLUTE_MAX_AMMO = 4000;
+    public static int ABSOLUTE_MAX_AMMO = 2500;
     public int maxAmmo = 500;
     public int ammo;
     Collider2D[] hitsBuffer = new Collider2D[10];
@@ -65,10 +64,17 @@ public class Player : MonoBehaviour
             case UpgradeShip.UpgradeType.ShieldSlot:
                 UpgradeShield();
                 break;
+            case UpgradeShip.UpgradeType.Heal:
+                Recharge(1f);
+                break;
+            case UpgradeShip.UpgradeType.Missile:
+                UpgradeMissile();
+                break;
             default:
                 break;
         }
     }
+
 
     public float bubbleDuration;
     public float shieldRechargeDuration;
@@ -104,13 +110,15 @@ public class Player : MonoBehaviour
 
 
     [Header("Upgrades")]
-    private float maxHPUpgradePercent = .2f;
     public int maxHP_UpgradesUnlocked = 0;
+    private float maxHPUpgradePercent = .5f;
     public static int max_maxHP_UpgradesUnlocked = 8;
     public int fireRate_UpgradeUnlocks = 0;
     public static int max_fireRate_UpgradeUnlocks = 5;
-    public int bubbleSlot_UpgradeUnlocks = 1;
-    public static int max_bubbleSlot_UpgradeUnlocks = 5;
+    public int bubbleSlot_UpgradeUnlocks = 0;
+    public static int max_bubbleSlot_UpgradeUnlocks = 4;
+    public int missile_UpgradeUnlocks = 0;
+    public static int max_missile_UpgradeUnlocks = 5;
 
     private void Awake()
     {
@@ -131,6 +139,8 @@ public class Player : MonoBehaviour
         aimReference = transform.position + (Vector3.up * aimReferenceMagnitude);
 
         //InvokeRepeating("Measure", 1f, 1f);
+
+        OnAmmoChange?.Invoke(ammo, maxAmmo);
     }
 
 
@@ -158,6 +168,10 @@ public class Player : MonoBehaviour
         {
             UpgradeShield();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            UpgradeMissile();
+        }
 #endif
     }
     public void Measure()
@@ -176,23 +190,24 @@ public class Player : MonoBehaviour
         HandleFixedCoins();
     }
 
-    [ContextMenu("UpgradeMaxHP")]
     public void UpgradeMaxHP()
     {
-        maxHP_UpgradesUnlocked++;
-        maxAmmo = Mathf.RoundToInt(BASE_MAX_AMMO * (1f + (maxHP_UpgradesUnlocked * maxHPUpgradePercent)));
+        Debug.Log("UpgradeMaxHP");
+        maxHP_UpgradesUnlocked = Mathf.Clamp(maxHP_UpgradesUnlocked + 1, 0, max_maxHP_UpgradesUnlocked);
+        maxAmmo = BASE_MAX_AMMO + Mathf.RoundToInt(BASE_MAX_AMMO * maxHP_UpgradesUnlocked * maxHPUpgradePercent);
         maxAmmo = Mathf.Clamp(maxAmmo, BASE_MAX_AMMO, ABSOLUTE_MAX_AMMO);
         Recharge(1f);
     }
 
-    [ContextMenu("UpgradeFirerate")]
     public void UpgradeFirerate()
     {
-        fireRate_UpgradeUnlocks = Mathf.Clamp(fireRate_UpgradeUnlocks + 1, 0, 5);
+        Debug.Log("UpgradeFirerate");
+        fireRate_UpgradeUnlocks = Mathf.Clamp(fireRate_UpgradeUnlocks + 1, 0, max_fireRate_UpgradeUnlocks);
     }
-    [ContextMenu("UpgradeShield")]
+
     public void UpgradeShield()
     {
+        Debug.Log("UpgradeShield");
         bubbleSlot_UpgradeUnlocks = Mathf.Clamp(bubbleSlot_UpgradeUnlocks + 1, 1, shieldCounters.Count-1);
 
         for (int i = 1; i < bubbleSlot_UpgradeUnlocks+1; i++)
@@ -201,6 +216,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpgradeMissile()
+    {
+        Debug.Log("UpgradeMissile");
+        missile_UpgradeUnlocks = Mathf.Clamp(missile_UpgradeUnlocks + 1, 0, max_missile_UpgradeUnlocks);
+    }
 
     private void HandleFixedBubble()
     {
@@ -284,10 +304,11 @@ public class Player : MonoBehaviour
         }
 
         var cableVector = aimReference - transform.position;
-        if (cableVector.magnitude > aimReferenceMagnitude)
-        {
-            aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
-        }
+        //if (cableVector.magnitude > aimReferenceMagnitude)
+        //{
+        //    aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
+        //}
+        aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
 
 
         turret.rotation = Quaternion.LookRotation(Vector3.forward, aimReference - transform.position);
@@ -403,7 +424,7 @@ public class Player : MonoBehaviour
         canTakeDamage = false;
         timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
-        Recharge(-.2f *BASE_MAX_AMMO/maxAmmo);
+        Recharge(-.15f *BASE_MAX_AMMO/maxAmmo);
         if (ammo <= 0)
         {
             Die();

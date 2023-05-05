@@ -24,9 +24,11 @@ public class AmmoBar : MonoBehaviour
     public void UpdateBar(int ammo, int maxAmmo)
     {
         currentColor = ammo <= Player.BASE_MAX_AMMO * .2f ? lowHP : Color.white;
+
         foreach (var item in images)
         {
-            item.fillAmount = ammo / (float)Player.ABSOLUTE_MAX_AMMO;
+            //item.fillAmount = ammo / (float)Player.ABSOLUTE_MAX_AMMO;
+            item.fillAmount = Mathf.Lerp(0f, 0.5f, ammo / (float)Player.ABSOLUTE_MAX_AMMO);
         }
         foreach (var item in baseImages)
         {
