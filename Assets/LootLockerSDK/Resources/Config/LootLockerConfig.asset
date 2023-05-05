@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: LootLockerConfig
   m_EditorClassIdentifier: 
   apiKey: prod_574da063776043229b9a2d1479e41457
-  token: d508a228bf10f3efb6e0ca063f94cffde1361a3a
+  token: f99fb79ecd4941ea440604030f9520634a65ac0e
   adminToken: 
   refreshToken: 
   domainKey: ue273hnx
   gameID: 0
   game_version: 1.0.0.0
-  deviceID: 5622eab3-c2dd-4709-a777-c2f224bfe348
+  deviceID: 6733bc4f-136f-4c83-9ccd-2d811bcec9f2
   platform: 4
   developmentMode: 1
   url: https://api.lootlocker.io/v1
@@ -28,5 +28,5 @@ MonoBehaviour:
   userUrl: https://ue273hnx.api.lootlocker.io/game
   baseUrl: https://ue273hnx.api.lootlocker.io
   clientSideRequestTimeOut: 5
-  currentDebugLevel: 0
+  currentDebugLevel: 3
   allowTokenRefresh: 0

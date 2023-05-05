@@ -21,7 +21,10 @@ namespace LootLocker
         /// <param name="logLevel">What level should this be logged as</param>
         public static Action<string> GetForLogLevel(LogLevel logLevel = LogLevel.Info)
         {
+#if UNITY_EDITOR
             return Debug.Log;
+#endif
+            return ignored => { };
             if (!ShouldLog(logLevel))
             {
                 return ignored => { };
