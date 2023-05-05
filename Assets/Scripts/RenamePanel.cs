@@ -14,6 +14,7 @@ public class RenamePanel : MonoBehaviour
     private void Awake()
     {
         Hide();
+        GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
     }
 
     public void Show()

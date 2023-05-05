@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CheckBounds : MonoBehaviour
 {
-    public const float H_Bound = 12;
-    public const float V_Bound = 9;
+    public const float H_Bound = 14;
+    public const float V_Bound = 7.5f;
 
 
     private void FixedUpdate()

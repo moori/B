@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using DG.Tweening;
-using System;
 
 public class Battery : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class Battery : MonoBehaviour
     public float percentCharge = 1;
     public Vector3 moveDirection;
     public bool isActive;
-
+    public UnityEvent OnSpawn;
     private void OnEnable()
     {
         modelTransform.DOLocalRotate(new Vector3(30, 90, 120), 1f).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
@@ -30,6 +30,7 @@ public class Battery : MonoBehaviour
         isActive = true;
         gameObject.SetActive(true);
         moveDirection = moveDir;
+        OnSpawn?.Invoke();
     }
 
     public void SpawnBattery()

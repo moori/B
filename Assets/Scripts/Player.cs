@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     private int evenShots;
     private Vector3 aimReference;
     public float aimReferenceMagnitude;
+    public float aimTrackSpeed;
 
     public UnityEvent<int> OnShoot;
     public UnityEvent<int,int> OnAmmoChange;

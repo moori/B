@@ -42,6 +42,13 @@ public class LevelController : MonoBehaviour
 
         levelText.DOFade(0f, 0f);
         PrespawnBosses();
+
+        GameController.OnGameOver += Stop;
+    }
+
+    private void Stop()
+    {
+        GameController.OnGameOver -= Stop;
     }
 
     private void OnDestroy()
@@ -102,6 +109,7 @@ public class LevelController : MonoBehaviour
 
     private void EvaluateWave()
     {
+        if (GameController.IsGameOver) return;
         if (currentWaveEnemies.Count == 0 )
         {
             //end wave
@@ -166,6 +174,7 @@ public class LevelController : MonoBehaviour
 
     private void ExpireWave()
     {
+        if (GameController.IsGameOver) return;
         levelData.currentWave++;
         var wave = levelData.GetNextWave();
         if (wave)

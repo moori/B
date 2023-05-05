@@ -93,7 +93,7 @@ public class Enemy : MonoBehaviour
     private IEnumerator StalketMovementPatternRoutine()
     {
         var point = moveTargetsRelativeToPlayer[rand.Next(moveTargetsRelativeToPlayer.Count)];
-        while (true)
+        while (!GameController.IsGameOver)
         {
             var target = GameController.GetClosestPositionInsideBounds(player.transform.position + point);
             if (Vector3.Distance(target, transform.position) < 1f)
@@ -168,12 +168,15 @@ public class Enemy : MonoBehaviour
             coin.Spawn(transform.position);
         }
 
+        var shard = PoolManager.instance.GetBatteryShard();
+        shard.Spawn(transform.position);
+
         if (batteryTimers.Count > 0)
         {
             var batShards = batteryTimers.Count(x => !x.isExpired);
             for (int i = 0; i < batShards; i++)
             {
-                var shard = PoolManager.instance.GetBatteryShard();
+                shard = PoolManager.instance.GetBatteryShard();
                 shard.Spawn(transform.position);
             }
         }

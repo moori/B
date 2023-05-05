@@ -27,8 +27,14 @@ public class BulletSpawner : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(FireAllRoutine());
+        GameController.OnGameOver += Stop;
     }
 
+    public void Stop()
+    {
+        StopAllCoroutines();
+        GameController.OnGameOver -= Stop;
+    }
     public IEnumerator FireAllRoutine()
     {
         yield return new WaitForSeconds(3f);

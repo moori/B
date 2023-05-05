@@ -39,7 +39,12 @@ public class Pulse : MonoBehaviour
         StartPulse(callback);
     }
 
-    public void StartPulse(System.Action callback = null)
+    public void StartPulse()
+    {
+        StartPulse(null);
+    }
+
+    public void StartPulse(System.Action callback)
     {
         //sprite.color = SetAlpha(sprite.color,0);
         //sprite.DOGradientColor(colorOverLifetime, duration);

@@ -4,7 +4,6 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 using TMPro;
-using DG.Tweening;
 
 public class GameController : MonoBehaviour
 {
@@ -51,8 +50,12 @@ public class GameController : MonoBehaviour
     [Header("UI")]
     public PauseMenu pauseMenu;
     public RenamePanel renamePanel;
+    public GameObject loading;
 
     public static bool IsGamePaused;
+    public static bool IsGameOver;
+
+    public static System.Action OnGameOver;
 
     private void Awake()
     {
@@ -69,13 +72,24 @@ public class GameController : MonoBehaviour
         Bullet.OnBulletHit += OnBulletHit;
 
         levelController = FindObjectOfType<LevelController>();
+        gameoverScreen.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+        loading.gameObject.SetActive(true);
+        loading.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        this.DelayAction(0.2f, () => { 
+            loading.gameObject.SetActive(false);
+        });
     }
 
     private void Update()
     {
         if (canRestart && Input.anyKeyDown)
         {
-            SceneManager.LoadScene("Game");
+            IsGameOver = false;
+            loading.SetActive(true);
+            this.DelayAction(0, () => { 
+                SceneManager.LoadScene("Game");
+            });
             return;
         }
 
@@ -126,14 +140,9 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
+        IsGameOver = true;
+        OnGameOver?.Invoke();
         StopAllCoroutines();
-        foreach (var enemy in enemiesAlive)
-        {
-            foreach (var weapon in enemy.GetComponentsInChildren<BulletSpawner>())
-            {
-                weapon.gameObject.SetActive(false);
-            }
-        }
         StartCoroutine(GameOverRoutine());
     }
 
