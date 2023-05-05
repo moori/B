@@ -236,6 +236,7 @@ public class GameController : MonoBehaviour
 
     public void UpdateScoreText(int score)
     {
+        if (IsGameOver) return;
         scoreText.text = string.Format("{0:000000000}", score);
         if (!scoreTextTweening)
         {

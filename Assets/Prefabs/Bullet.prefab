@@ -49,11 +49,19 @@ MonoBehaviour:
   damage: 1
   speed: 14
   isDead: 0
+  lifetime: -1
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 128
   collisionOffset: {x: 0, y: 0.13, z: 0}
   radius: 0.07
+  OnBulletSpawn:
+    m_PersistentCalls:
+      m_Calls: []
+  isTrackingBullet: 0
+  turningSpeed: 0
+  detectionRadius: 0
+  target: {fileID: 0}
   hitClip: {fileID: 8300000, guid: 65e42605773483945bb3fbbf571e50b9, type: 3}
 --- !u!114 &3795332683189810272
 MonoBehaviour:

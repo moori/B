@@ -143,14 +143,15 @@ public class LevelController : MonoBehaviour
 
     private IEnumerator SpawnBossRoutine()
     {
+        var boss = levelData.boss.boss;
+        boss.healthComponent.IncreaseMaxHPOVerOriginal(30 * currentLevel);
+
         BackColorController.instance.SetBoss();
         bossHPBar.Show();
         yield return new WaitForSeconds(0.5f);
         bossHPBar.SetFill(1f, 1f);
         yield return new WaitForSeconds(3f);
 
-        //var boss = Instantiate<Enemy>(levelData.boss.boss, levelData.boss.point, Quaternion.identity);
-        var boss = levelData.boss.boss;
         boss.OnHPChangePercent += bossHPBar.SetFill;
         boss.Respawn(levelData.boss.point);
         currentBoss = boss;

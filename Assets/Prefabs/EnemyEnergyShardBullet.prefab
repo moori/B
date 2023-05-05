@@ -222,6 +222,7 @@ MonoBehaviour:
   damage: 1
   speed: 5
   isDead: 0
+  lifetime: -1
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -242,6 +243,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isTrackingBullet: 0
+  turningSpeed: 0
+  detectionRadius: 0
+  target: {fileID: 0}
   hitClip: {fileID: 0}
 --- !u!114 &1470325507949230631
 MonoBehaviour:

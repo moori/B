@@ -1266,6 +1266,7 @@ MonoBehaviour:
   movePattern: 0
   moveTargetsRelativeToPlayer: []
   coinAmount: 8
+  baseEnergyShardAmount: 1
   batteryTimers:
   - {fileID: 2654463855793846825}
   - {fileID: 9157344770853222522}

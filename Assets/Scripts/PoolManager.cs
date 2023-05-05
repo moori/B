@@ -18,6 +18,7 @@ public class PoolManager : MonoBehaviour
     public Pool coinPool;
     public Pool batteryShardPool;
     public Pool shieldHitParticlePool;
+    public Pool trackingBulletPool;
 
     private void Awake()
     {
@@ -47,6 +48,10 @@ public class PoolManager : MonoBehaviour
     public Bullet GetEnemyBatteryBullet()
     {
         return enemyBatteryBulletPool.GetItem().GetComponent<Bullet>();
+    }
+    public Bullet GetTrackingBullet()
+    {
+        return trackingBulletPool.GetItem().GetComponent<Bullet>();
     }
     public ParticleSystem GetExplosionParticles()
     {

@@ -7,6 +7,7 @@ public class HealthComponent : MonoBehaviour
 {
     public int maxHP;
     public int HP;
+    private int originalHP=-1;
 
     private HitTarget hitTarget;
 
@@ -15,7 +16,10 @@ public class HealthComponent : MonoBehaviour
 
     private void Awake()
     {
+        if (originalHP < 0) originalHP = maxHP;
+
         HP = maxHP;
+
         if (TryGetComponent<HitTarget>(out var target)){
             hitTarget = target;
             hitTarget.OnHit.AddListener(TakeDamage);
@@ -35,6 +39,11 @@ public class HealthComponent : MonoBehaviour
         HP = maxHP;
     }
 
+    public void IncreaseMaxHPOVerOriginal(int amount)
+    {
+        maxHP = originalHP + amount;
+        HP = maxHP;
+    }
 
     public void TakeDamage(int damage)
     {

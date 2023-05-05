@@ -612,6 +612,7 @@ MonoBehaviour:
   - {x: -2.82, y: 2.82, z: 0}
   - {x: 2.82, y: 2.82, z: 0}
   coinAmount: 6
+  baseEnergyShardAmount: 1
   batteryTimers:
   - {fileID: 4509008231910820354}
   - {fileID: 7300571690836379729}

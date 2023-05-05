@@ -43,6 +43,10 @@ public class Player : MonoBehaviour
     public float aimReferenceMagnitude;
     public float aimTrackSpeed;
 
+    [Header("Missile")]
+    private float timeLastMissileShot;
+    private float delayBetweenMissileShots = 1.5f;
+
     public UnityEvent<int> OnShoot;
     public UnityEvent<int,int> OnAmmoChange;
     public UnityEvent<float> OnRecharge;
@@ -50,30 +54,6 @@ public class Player : MonoBehaviour
 
     [Header("Bubble")]
     public float bubbleRadius;
-
-    internal void ApplyUpgrade(UpgradeShip.UpgradeType upgradeType)
-    {
-        switch (upgradeType)
-        {
-            case UpgradeShip.UpgradeType.Firerate:
-                UpgradeFirerate();
-                break;
-            case UpgradeShip.UpgradeType.MaxHP:
-                UpgradeMaxHP();
-                break;
-            case UpgradeShip.UpgradeType.ShieldSlot:
-                UpgradeShield();
-                break;
-            case UpgradeShip.UpgradeType.Heal:
-                Recharge(1f);
-                break;
-            case UpgradeShip.UpgradeType.Missile:
-                UpgradeMissile();
-                break;
-            default:
-                break;
-        }
-    }
 
 
     public float bubbleDuration;
@@ -189,6 +169,30 @@ public class Player : MonoBehaviour
 
         HandleFixedCoins();
     }
+    internal void ApplyUpgrade(UpgradeShip.UpgradeType upgradeType)
+    {
+        switch (upgradeType)
+        {
+            case UpgradeShip.UpgradeType.Firerate:
+                UpgradeFirerate();
+                break;
+            case UpgradeShip.UpgradeType.MaxHP:
+                UpgradeMaxHP();
+                break;
+            case UpgradeShip.UpgradeType.ShieldSlot:
+                UpgradeShield();
+                break;
+            case UpgradeShip.UpgradeType.Heal:
+                Recharge(1f);
+                break;
+            case UpgradeShip.UpgradeType.Missile:
+                UpgradeMissile();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     public void UpgradeMaxHP()
     {
@@ -354,7 +358,7 @@ public class Player : MonoBehaviour
     {
         if (PlayerInputs.Fire)
         {
-            if(Time.time - timeLastShot >= delayBetweenShots)
+            if (Time.time - timeLastShot >= delayBetweenShots)
             {
                 Shoot();
                 isShooting = true;
@@ -368,7 +372,7 @@ public class Player : MonoBehaviour
 
                 //bonus
                 shotsFiredBonus++;
-                if(shotsFiredBonus >= 5)
+                if (shotsFiredBonus >= 5)
                 {
                     shotsFiredBonus = 0;
                     for (int i = 0; i < fireRate_UpgradeUnlocks; i++)
@@ -377,19 +381,28 @@ public class Player : MonoBehaviour
                     }
                 }
             }
-            if (!fireSrc.isPlaying && ammo>0)
+            if (!fireSrc.isPlaying && ammo > 0)
             {
                 fireSrc.DOKill();
                 fireSrc.volume = 0.8f;
                 fireSrc.Play();
             }
+
+            if (Time.time - timeLastMissileShot >= delayBetweenMissileShots)
+            {
+                for (int i = 0; i < missile_UpgradeUnlocks; i++)
+                {
+                    FireMissile(i);
+                }
+            }
+
         }
         else
         {
             isShooting = false;
             if (fireSrc.isPlaying && !DOTween.IsTweening(fireSrc))
             {
-                fireSrc.DOFade(0f, 0.1f).OnComplete(()=>{ fireSrc.Stop(); });
+                fireSrc.DOFade(0f, 0.1f).OnComplete(() => { fireSrc.Stop(); });
             }
         }
     }
@@ -401,13 +414,27 @@ public class Player : MonoBehaviour
         if (!b) return;
         timeLastShot = Time.time;
         b.transform.position = turret.transform.TransformPoint(Vector3.up * 0.25f);
-        var shotDir = turret.transform.up + turret.transform.TransformVector(AddNoiseOnAngle(-minAngleError,minAngleError));
+        var shotDir = turret.transform.up + turret.transform.TransformVector(AddNoiseOnAngle(-minAngleError, minAngleError));
         b.Shoot(shotDir);
         OnShoot?.Invoke(1);
         ammo -= 1;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
 
         shotsFiredLastSecond++;
+    }
+    private void FireMissile(int index)
+    {
+        if (ammo <= 5) return;
+        var b = PoolManager.instance.GetTrackingBullet();
+        if (!b) return;
+
+        timeLastMissileShot = Time.time;
+        b.transform.position = turret.transform.TransformPoint(Vector3.down * 0.5f);
+        var shotDir = -turret.transform.up + (turret.transform.right * index * 0.2f * (index % 2 == 0 ? 1 : -1));
+        b.Shoot(shotDir);
+        OnShoot?.Invoke(5);
+        ammo -= 5;
+        OnAmmoChange?.Invoke(ammo, maxAmmo);
     }
 
     public static Vector3 AddNoiseOnAngle(float min, float max)

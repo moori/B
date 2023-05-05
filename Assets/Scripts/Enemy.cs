@@ -9,7 +9,8 @@ public class Enemy : MonoBehaviour
 {
     public bool isActive;
     public Color[] hpColors;
-    private HealthComponent healthComponent;
+    [HideInInspector]
+    public HealthComponent healthComponent;
     private Player player;
 
     public static System.Action<Enemy> OnEnemyDeath;
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Drop")]
     public int coinAmount;
+    public int baseEnergyShardAmount;
     public List<BatteryTimer> batteryTimers = new List<BatteryTimer>();
     public float batteryLifetime;
 
@@ -167,15 +169,18 @@ public class Enemy : MonoBehaviour
             coin.Spawn(transform.position);
         }
 
-        var shard = PoolManager.instance.GetBatteryShard();
-        shard.Spawn(transform.position);
+        for (int i = 0; i < baseEnergyShardAmount; i++)
+        {
+            var shard = PoolManager.instance.GetBatteryShard();
+            shard.Spawn(transform.position);
+        }
 
         if (batteryTimers.Count > 0)
         {
             var batShards = batteryTimers.Count(x => !x.isExpired);
             for (int i = 0; i < batShards; i++)
             {
-                shard = PoolManager.instance.GetBatteryShard();
+                var shard = PoolManager.instance.GetBatteryShard();
                 shard.Spawn(transform.position);
             }
         }
