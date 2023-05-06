@@ -26,6 +26,7 @@ public class UpgradePhaseController : MonoBehaviour
 
     public void StartUpgradePhase()
     {
+        if (GameController.IsGameOver) return;
         isActive = true;
         for (int i = randomUpgrade.Count - 1; i >= 0; i--)
         {

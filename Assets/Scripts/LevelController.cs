@@ -112,13 +112,11 @@ public class LevelController : MonoBehaviour
         levelText.DOFade(1f, 0.2f).OnComplete(() => {
             levelText.DOFade(0f, 0.2f).SetDelay(3f);
         });
-
-        //AudioManager.PlayLevelMusic();
     }
 
     private void EvaluateWave()
     {
-        if (GameController.IsGameOver) return;
+        if (GameController.IsGameOver || TutorialController.IsTutorial) return;
         if (currentWaveEnemies.Count == 0 )
         {
             //end wave

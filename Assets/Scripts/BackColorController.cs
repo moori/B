@@ -30,6 +30,18 @@ public class BackColorController : MonoBehaviour
         SetIdle();
     }
 
+    public void Flash(Color color, System.Action callback)
+    {
+        sr.DOKill();
+        var originalColor = sr.color;
+        var halfDuration = .15f;
+        sr.DOColor(color, halfDuration).OnComplete(()=> {
+            sr.DOColor(originalColor, halfDuration).OnComplete(() => {
+                callback?.Invoke();
+            });
+        });
+    }
+
     public void SetIdle()
     {
         sr.DOKill();

@@ -30,7 +30,7 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         //InvokeRepeating(nameof(CheckPlaylistRoutine), 2f, 1f);
-        PlayLevelMusic();
+        //PlayLevelMusic();
     }
 
     private void OnDestroy()
@@ -71,12 +71,15 @@ public class AudioManager : MonoBehaviour
     //}
     public static void PlayLevelMusic()
     {
+        instance.StopAllCoroutines();
         var src = instance.bgmSource;
+        DOTween.Kill(src);
         src.loop = false;
         src.volume = 1f;
         src.clip = instance.GetNextBGM();
+        src.Play();
+        Debug.Log($"playing {src.clip.name}. {src.clip.length}s long");
         src.DOFade(1f, 1f).OnComplete(()=> { 
-            src.Play();
             instance.DelayAction(src.clip.length + 2f, () => {
                 PlayLevelMusic();
             });
@@ -92,14 +95,14 @@ public class AudioManager : MonoBehaviour
         src.clip = instance.ambienceMusic;
         src.Play();
         return;
-        src.DOFade(0, 2f).OnComplete(() =>
-        {
-            src.DOFade(1f, 1f);
-            src.clip = instance.ambienceMusic;
-            src.Play();
-        });
     }
-
+    public static void PauseBGM(bool pause)
+    {
+        if(pause)
+            instance.bgmSource.Pause();
+        else
+            instance.bgmSource.UnPause();
+    }
     public static void FadeOut()
     {
         instance.StopAllCoroutines();

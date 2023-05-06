@@ -45,13 +45,16 @@ public class PauseMenu : MonoBehaviour
         maxHPText.text = $"max hp: {player.maxHP_UpgradesUnlocked}/{Player.max_maxHP_UpgradesUnlocked}";
         shieldSlotText.text = $"shield slots: {player.bubbleSlot_UpgradeUnlocks}/{Player.max_bubbleSlot_UpgradeUnlocks}";
         missileText.text = $"missiles: {player.missile_UpgradeUnlocks}/{Player.max_missile_UpgradeUnlocks}";
+
+        AudioManager.PauseBGM(true);
     }
 
     public void OnClickResume()
     {
         GameController.IsGamePaused = false;
         Time.timeScale = 1f;
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); 
+        AudioManager.PauseBGM(false);
     }
     public void OnClickRestart()
     {

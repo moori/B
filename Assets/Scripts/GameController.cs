@@ -57,6 +57,9 @@ public class GameController : MonoBehaviour
 
     public static System.Action OnGameOver;
 
+    [Header("Tutorial")]
+    public TutorialController tutorialController;
+
     private void Awake()
     {
         if (instance == null)
@@ -110,11 +113,15 @@ public class GameController : MonoBehaviour
         //    Spawn();
         //    yield return new WaitForSeconds(0.66f);
         //}
+        yield return StartCoroutine(tutorialController.TutorialRoutine());
         levelController.StartLevel();
 
         StartCoroutine(BatterySpawnerRoutine());
         UpdateScoreText(0);
+
+        AudioManager.PlayLevelMusic();
     }
+
 
     private void OnDestroy()
     {

@@ -7,6 +7,7 @@ using DG.Tweening;
 public class AmmoBar : MonoBehaviour
 {
     public List<Image> images;
+    public List<Image> backImages;
     public List<Image> baseImages;
     public Color lowHP;
     private Color currentColor;
@@ -29,6 +30,11 @@ public class AmmoBar : MonoBehaviour
         {
             //item.fillAmount = ammo / (float)Player.ABSOLUTE_MAX_AMMO;
             item.fillAmount = Mathf.Lerp(0f, 0.5f, ammo / (float)Player.ABSOLUTE_MAX_AMMO);
+        }
+        foreach (var item in backImages)
+        {
+            //item.fillAmount = ammo / (float)Player.ABSOLUTE_MAX_AMMO;
+            item.fillAmount = Mathf.Lerp(0f, 0.5f, maxAmmo / (float)Player.ABSOLUTE_MAX_AMMO);
         }
         foreach (var item in baseImages)
         {
