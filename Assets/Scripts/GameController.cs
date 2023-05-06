@@ -195,6 +195,8 @@ public class GameController : MonoBehaviour
     {
         while (true)
         {
+            if (levelController.enemiesAlive.Count <= 0) yield return new WaitForSeconds(5f);
+
             var ammoPercent = player.ammo / (float)player.maxAmmo;
             if (ammoPercent < .2f)
             {

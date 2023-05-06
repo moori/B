@@ -7,7 +7,7 @@ public class Pulse : MonoBehaviour
 {
     public Color startColor;
     public Color endColor;
-    private SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     public float duration;
     public float fromScale;
     public float toScale;

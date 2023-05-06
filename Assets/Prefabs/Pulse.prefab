@@ -99,6 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startColor: {r: 1, g: 0, b: 0, a: 0}
   endColor: {r: 1, g: 0, b: 0, a: 1}
+  sprite: {fileID: 4247509845908471732}
   duration: 1.4
   fromScale: 8
   toScale: 0
+  isRepeat: 0

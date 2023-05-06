@@ -54,8 +54,6 @@ public class Player : MonoBehaviour
 
     [Header("Bubble")]
     public float bubbleRadius;
-
-
     public float bubbleDuration;
     public float shieldRechargeDuration;
     public bool isBubbling;
@@ -344,6 +342,7 @@ public class Player : MonoBehaviour
                 bubbleStartTime = Time.time;
                 bubbleSprite.transform.localScale = Vector3.zero;
                 bubbleSprite.transform.DOScale(bubbleRadius, 0.075f);
+                bubbleSprite.transform.DOScale(0.3f, 1f).SetDelay(bubbleDuration - 1f + 0.075f);
                 isBubbling = true;
 
                 var shieldCounter = shieldCounters.FirstOrDefault(x => x.isFull);

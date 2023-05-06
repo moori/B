@@ -1895,6 +1895,8 @@ MonoBehaviour:
   ammo: 0
   shotsFiredLastSecond: 0
   firerateUpgradeRef: 8
+  aimReferenceMagnitude: 1.5
+  aimTrackSpeed: 20
   OnShoot:
     m_PersistentCalls:
       m_Calls: []
@@ -1903,6 +1905,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AmmoBar, Assembly-CSharp
+        m_MethodName: UpdateBar
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: AmmoCounter, Assembly-CSharp
         m_MethodName: UpdateBar
         m_Mode: 0
         m_Arguments:
@@ -1944,7 +1958,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   bubbleRadius: 0.7
-  bubbleDuration: 2
+  bubbleDuration: 2.5
   shieldRechargeDuration: 5
   isBubbling: 0
   bubbleSprite: {fileID: 2086387326214938103}
@@ -1993,6 +2007,7 @@ MonoBehaviour:
   maxHP_UpgradesUnlocked: 0
   fireRate_UpgradeUnlocks: 0
   bubbleSlot_UpgradeUnlocks: 0
+  missile_UpgradeUnlocks: 0
 --- !u!50 &8056540684491414878
 Rigidbody2D:
   serializedVersion: 4
