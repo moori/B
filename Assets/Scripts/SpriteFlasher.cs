@@ -56,7 +56,11 @@ public class SpriteFlasher : MonoBehaviour
     private IEnumerator FlashRoutine()
     {
         var t = (flashDuration / (float)amount) * 0.5f;
-        if (intensity >= 0) sprite.transform.DOShakePosition(flashDuration, intensity);
+        if (intensity >= 0)
+        {
+            if(!DOTween.IsTweening(sprite.transform))
+                sprite.transform.DOShakePosition(flashDuration, intensity);
+        }
         for (int i = 0; i < amount; i++)
         {
             sprite.color = color;

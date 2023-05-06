@@ -15,12 +15,12 @@ public class LevelController : MonoBehaviour
     public List<Enemy> currentRandosEnemies = new List<Enemy>();
     public Enemy currentBoss;
 
-    private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 4, 4, 4, 4, 5 };
-    private int[] maxConcurrentRandosPerLevelProgression = new int[] { 0, 0, 1, 2, 2, 2, 3, 4 };
+    private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 3, 4, 4 };
+    private int[] randosPerLevelProgression = new int[] { 0, 0, 3, 5, 5, 6, 7, 8, 9};
 
     [Header("DBs")]
     public List<SpawnGroup> waveDB;
-    public List<WaveData> randosDB;
+    public List<SpawnData> randosDB;
     public List<BossData> bossDB;
 
     private System.Random rand;
@@ -112,6 +112,8 @@ public class LevelController : MonoBehaviour
         levelText.DOFade(1f, 0.2f).OnComplete(() => {
             levelText.DOFade(0f, 0.2f).SetDelay(3f);
         });
+
+        //AudioManager.PlayLevelMusic();
     }
 
     private void EvaluateWave()
@@ -126,18 +128,15 @@ public class LevelController : MonoBehaviour
             if (wave)
             {
                 StartCoroutine(SpawnGroupRoutine(wave));
-                Debug.Log("Start Wave");
             }
             else
             {
                 //boss
-                Debug.Log("boss");
-                StartCoroutine(SpawnBossRoutine());
+                if (enemiesAlive.Count == 0)
+                {
+                    StartCoroutine(SpawnBossRoutine());
+                }
             }
-        }
-        else if(currentBoss==null)
-        {
-            //check spawnRando
         }
     }
 
@@ -155,6 +154,8 @@ public class LevelController : MonoBehaviour
         boss.OnHPChangePercent += bossHPBar.SetFill;
         boss.Respawn(levelData.boss.point);
         currentBoss = boss;
+
+        //AudioManager.PlayBossMusic();
     }
 
     private IEnumerator WaveDurationRoutine(float duration)
@@ -171,7 +172,6 @@ public class LevelController : MonoBehaviour
         if (wave)
         {
             StartCoroutine(SpawnGroupRoutine(wave));
-            Debug.Log("Start Wave");
         }
     }
 
@@ -191,7 +191,8 @@ public class LevelController : MonoBehaviour
                 case Spawnable.Stalker:
                     enemy = PoolManager.instance.GetStalkerEnemy();
                     break;
-                default:
+                case Spawnable.LasetTurret:
+                    enemy = PoolManager.instance.GetLAserTurretEnemy();
                     break;
             }
 
@@ -232,6 +233,8 @@ public class LevelController : MonoBehaviour
         bossHPBar.Hide();
         yield return new WaitForSeconds(1f);
         upgradePhaseController.StartUpgradePhase();
+
+        //AudioManager.PlayAmbience();
     }
 
     public LevelData CreateLevel(int levelIndex)
@@ -239,17 +242,29 @@ public class LevelController : MonoBehaviour
         var level = new LevelData();
         level.mainSequence = new List<SpawnGroup>();
         int waveProg = levelIndex <= wavesPerLevelProgression.Length - 1 ? wavesPerLevelProgression[levelIndex] : wavesPerLevelProgression.Last();
+        int randosProg = levelIndex <= randosPerLevelProgression.Length - 1 ? randosPerLevelProgression[levelIndex] : randosPerLevelProgression.Last();
+
         SpawnGroup lastPicked = null;
         for (int i = 0; i < waveProg; i++)
         {
-            SpawnGroup w = waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom();
+            SpawnGroup w = Instantiate(waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom());  
             while (w == lastPicked)
             {
                 w = waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel ).ToList().GetRandom();
             }
+            Debug.Log($"Loading wave groud: {w.name}");
             lastPicked = w;
             level.mainSequence.Add(w);
         }
+        Debug.Log($"Adding {randosProg} randos");
+
+        for (int i = 0; i < randosProg; i++)
+        {
+            SpawnData rando = randosDB.GetRandom();
+            level.mainSequence.GetRandom().spawns.Add(rando);
+        }
+
+
         level.boss= bossDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom();
 
         return level;

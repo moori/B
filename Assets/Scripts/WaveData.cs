@@ -41,7 +41,7 @@ public class SpawnData
                 break;
             default:
             case Region.Random:
-                pos = new Vector3(Mathf.Clamp(pos.x, -GameController.HORIZONTAL_MOVEMENT_BOUND, GameController.HORIZONTAL_MOVEMENT_BOUND), Mathf.Clamp(pos.y, -GameController.VERTICAL_MOVEMENT_BOUND, GameController.VERTICAL_MOVEMENT_BOUND), 0);
+                pos = new Vector3(Random.Range(-GameController.HORIZONTAL_MOVEMENT_BOUND, GameController.HORIZONTAL_MOVEMENT_BOUND), Random.Range(-GameController.VERTICAL_MOVEMENT_BOUND, GameController.VERTICAL_MOVEMENT_BOUND), 0);
                 break;
         }
         return pos;
@@ -51,7 +51,8 @@ public class SpawnData
 public enum Spawnable
 {
     StaticMinion,
-    Stalker
+    Stalker,
+    LasetTurret
 }
 
 public enum Region

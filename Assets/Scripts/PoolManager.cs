@@ -13,6 +13,7 @@ public class PoolManager : MonoBehaviour
     public Pool dummyEnemyPool;
     public Pool simpleEnemyPool;
     public Pool stalkerEnemyPool;
+    public Pool laserTurretEnemyPool;
     public Pool pulsePool;
     public Pool batteryPool;
     public Pool coinPool;
@@ -68,6 +69,10 @@ public class PoolManager : MonoBehaviour
     public Enemy GetStalkerEnemy()
     {
         return stalkerEnemyPool.GetItem().GetComponent<Enemy>();
+    }
+    public Enemy GetLAserTurretEnemy()
+    {
+        return laserTurretEnemyPool.GetItem().GetComponent<Enemy>();
     }
     public Pulse GetPulse()
     {

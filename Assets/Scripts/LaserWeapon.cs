@@ -36,6 +36,15 @@ public class LaserWeapon : MonoBehaviour
         fireSprite.transform.DOScaleX(0, 0f);
     }
 
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        isFiring = false;
+        fireSprite.transform.DOScaleX(0f, .15f);
+        enemy.facePlayer = true;
+        firePart.gameObject.SetActive(false);
+    }
+
     public void Stop()
     {
         StopAllCoroutines(); 
@@ -43,6 +52,8 @@ public class LaserWeapon : MonoBehaviour
         fireSprite.transform.DOScaleX(0f, .15f);
         enemy.facePlayer = true;
         firePart.gameObject.SetActive(false);
+        chargePart.gameObject.SetActive(false);
+        aimSprite.gameObject.SetActive(false);
         GameController.OnGameOver -= Stop;
     }
 
@@ -57,7 +68,7 @@ public class LaserWeapon : MonoBehaviour
 
             enemy.facePlayer = false;
             chargePart.gameObject.SetActive(true);
-            aimSprite.transform.localScale += new Vector3(aimSprite.transform.localScale.x, 0, 0); 
+            aimSprite.transform.localScale = new Vector3(0.06f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z); 
             yield return new WaitForSeconds(stillBeforeShotDuration);
 
 
@@ -72,7 +83,7 @@ public class LaserWeapon : MonoBehaviour
             fireSprite.transform.DOScaleX(0f, .15f);
             enemy.facePlayer = true;
             firePart.gameObject.SetActive(false);
-            aimSprite.transform.localScale -= new Vector3(aimSprite.transform.localScale.x/2f, 0, 0);
+            aimSprite.transform.localScale = new Vector3(0.03f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z);
             yield return new WaitForSeconds(delayBetweenAttacks);
         }
     }

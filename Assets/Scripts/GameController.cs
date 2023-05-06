@@ -120,6 +120,7 @@ public class GameController : MonoBehaviour
     {
         instance = null;
         Enemy.OnEnemyDeath -= OnEnemyDeath;
+        Bullet.OnBulletHit -= OnBulletHit;
     }
 
     public void Spawn()
@@ -144,6 +145,8 @@ public class GameController : MonoBehaviour
         OnGameOver?.Invoke();
         StopAllCoroutines();
         StartCoroutine(GameOverRoutine());
+
+        AudioManager.PlayAmbience();
     }
 
     private IEnumerator GameOverRoutine()
@@ -203,7 +206,7 @@ public class GameController : MonoBehaviour
             }
             else if (ammoPercent < .5f)
             {
-                if (Random.value <= .15f)
+                if (Random.value <= .2f)
                 {
                     SpawnBattery();
                     yield return new WaitForSeconds(10f);
@@ -229,6 +232,7 @@ public class GameController : MonoBehaviour
     }
     public void OnBulletHit()
     {
+        if (IsGameOver) return;
         score += BULLET_HIT_SCORE;
         UpdateScoreText(score);
     }
