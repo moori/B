@@ -14,6 +14,7 @@ public class MenuController : MonoBehaviour
     public void OnClickStart()
     {
         loading.SetActive(true);
+        AudioManager.FadeOut();
         this.DelayAction(1f, () => {
             SceneManager.LoadScene("Game");
         });
