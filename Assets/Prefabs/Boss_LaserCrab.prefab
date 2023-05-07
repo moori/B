@@ -76376,9 +76376,9 @@ MonoBehaviour:
   pulseDuration: 2.4
   pulseFromScale: 14
   pulseToScale: 0.1
-  spawnClip: {fileID: 8300000, guid: 973cd0322cde53f41a377c9b0dc49854, type: 3}
+  spawnClip: {fileID: 8300000, guid: 54c3e2e5cb5b32442a8682cb65940f63, type: 3}
   spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
-  deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
+  deathClip: {fileID: 8300000, guid: b4796e5cf2874a642b48d3dacfcbd152, type: 3}
 --- !u!114 &8689914064389159439
 MonoBehaviour:
   m_ObjectHideFlags: 0

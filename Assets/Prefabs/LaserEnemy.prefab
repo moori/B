@@ -39460,7 +39460,7 @@ MonoBehaviour:
   movePattern: 0
   moveTargetsRelativeToPlayer: []
   coinAmount: 8
-  baseEnergyShardAmount: 1
+  baseEnergyShardAmount: 2
   batteryTimers:
   - {fileID: 2863077944545254338}
   - {fileID: 8969009254223059345}
@@ -39471,7 +39471,7 @@ MonoBehaviour:
   pulseDuration: 1.4
   pulseFromScale: 8
   pulseToScale: 0.1
-  spawnClip: {fileID: 8300000, guid: 973cd0322cde53f41a377c9b0dc49854, type: 3}
+  spawnClip: {fileID: 8300000, guid: 7f386aaf3f8bbe341bd2776fe7fd4e91, type: 3}
   spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
   deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
 --- !u!114 &6594063222126557002

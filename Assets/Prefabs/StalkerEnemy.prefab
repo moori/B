@@ -234,12 +234,13 @@ MonoBehaviour:
   - {x: -0.05, y: 1, z: 0}
   - {x: 0, y: 1, z: 0}
   - {x: 0.05, y: 1, z: 0}
+  initialDelay: 0
   delayBetweenShots: 0.05
   volleysPerAttack: 2
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0.25
   angleError: 1
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 0
 --- !u!1 &1386837547315422251
 GameObject:
@@ -5664,7 +5665,7 @@ MonoBehaviour:
   - {x: -2.82, y: 2.82, z: 0}
   - {x: 2.82, y: 2.82, z: 0}
   coinAmount: 6
-  baseEnergyShardAmount: 1
+  baseEnergyShardAmount: 2
   batteryTimers:
   - {fileID: 4509008231910820354}
   - {fileID: 7300571690836379729}
@@ -5674,9 +5675,9 @@ MonoBehaviour:
   pulseDuration: 1.4
   pulseFromScale: 8
   pulseToScale: 0.1
-  spawnClip: {fileID: 0}
-  spawnPulseClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  spawnClip: {fileID: 8300000, guid: 131612b8cd151354da2a42b04db0172c, type: 3}
+  spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
+  deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
 --- !u!114 &4803745067534214794
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
+using System;
 
 public class Enemy : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
     public float speed;
     public MovePattern movePattern;
     public List<Vector3> moveTargetsRelativeToPlayer = new List<Vector3>();
+    public List<Vector3> moveTargetsAbsolute = new List<Vector3>();
 
     [Header("Drop")]
     public int coinAmount;
@@ -45,10 +47,18 @@ public class Enemy : MonoBehaviour
     public AudioClip spawnPulseClip;
     public AudioClip deathClip;
 
+    [Header("Promotion")]
+    public bool wasPromoted;
+    public SpriteRenderer promotionSprite;
+    public float[] hpIncreasePerLevel;
+    public float[] scaleIncreasePerLevel;
+    private float delayBetweenWaypoints;
+
     public enum MovePattern
     {
         Static,
-        Stalker
+        Stalker,
+        WayPoints
     }
 
     private void Awake()
@@ -85,6 +95,9 @@ public class Enemy : MonoBehaviour
             case MovePattern.Stalker:
                 StartCoroutine(StalketMovementPatternRoutine());
                 break;
+            case MovePattern.WayPoints:
+                StartCoroutine(WaypointsPatternRoutine());
+                break;
             case MovePattern.Static:
             default:
                 break;
@@ -110,8 +123,33 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private IEnumerator WaypointsPatternRoutine()
+    {
+        var points = new List<Vector3>(moveTargetsAbsolute);
+        while (!GameController.IsGameOver)
+        {
+            var target = GameController.GetClosestPositionInsideBounds(points[0]);
+
+            yield return new WaitUntil(() => {
+                if (GameController.IsGamePaused) return false;
+                var dir = (target - transform.position).normalized;
+                transform.position += dir * speed * Time.fixedDeltaTime;
+                return Vector3.Distance(target, transform.position) < 0.5f;
+            });
+
+
+            yield return new WaitForSeconds(delayBetweenWaypoints);
+
+            points.RemoveAt(0);
+            points.Add(target);
+
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
     private void Enable()
     {
+        HandlePromotion();
         transform.localScale = Vector3.one;
 
         foreach (var batteryTimer in batteryTimers)
@@ -120,6 +158,21 @@ public class Enemy : MonoBehaviour
         }
         StepBatteryCounter();
         SetMovementPattern();
+    }
+
+    private void HandlePromotion()
+    {
+        if (gameObject.name == "Boss_Shelly")
+        {
+            if (!wasPromoted && LevelController.currentLevel >= 4)
+            {
+                movePattern = MovePattern.WayPoints;
+                moveTargetsAbsolute = new List<Vector3>();
+                moveTargetsAbsolute.Add(new Vector3(-7, 2, 0));
+                moveTargetsAbsolute.Add(new Vector3(7, 2, 0));
+                moveTargetsAbsolute.Shuffle();
+            }
+        }
     }
 
     public void Respawn(Vector3 pos)

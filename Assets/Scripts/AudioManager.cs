@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
     public AudioSource bgmSource;
 
+    [Header("Mixer")]
+    public AudioMixerGroup BGM_Group;
+    public AudioMixerGroup SFX_Group;
+
     [Header("Clips")]
     public List<AudioClip> levelBGMs;
     public List<AudioClip> bossBGMs;
     public AudioClip upgradePhaseMusic;
     public AudioClip ambienceMusic;
+
 
     private void Awake()
     {
@@ -31,6 +37,9 @@ public class AudioManager : MonoBehaviour
     {
         //InvokeRepeating(nameof(CheckPlaylistRoutine), 2f, 1f);
         //PlayLevelMusic();
+
+        BGM_Group.audioMixer.SetFloat(BGM_Group.name, VolumeController.LinearToDecibel(PlayerPrefs.GetFloat(BGM_Group.name, 0.75f)));
+        SFX_Group.audioMixer.SetFloat(SFX_Group.name, VolumeController.LinearToDecibel(PlayerPrefs.GetFloat(SFX_Group.name, 1f)));
     }
 
     private void OnDestroy()
@@ -78,7 +87,6 @@ public class AudioManager : MonoBehaviour
         src.volume = 1f;
         src.clip = instance.GetNextBGM();
         src.Play();
-        Debug.Log($"playing {src.clip.name}. {src.clip.length}s long");
         src.DOFade(1f, 1f).OnComplete(()=> { 
             instance.DelayAction(src.clip.length + 2f, () => {
                 PlayLevelMusic();

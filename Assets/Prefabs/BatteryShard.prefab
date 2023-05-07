@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9118856c2f30d48b33accc51214db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 30
+  lifetime: 10
   modelTransform: {fileID: 4219508383754988405}
   rotateSpeed: 8
   shadowTransform: {fileID: 158900335729262750}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelTransform: {fileID: 4219508383754988405}
   speed: 0
-  percentCharge: 0.1
+  percentCharge: 0.05
   moveDirection: {x: 0, y: 0, z: 0}
   isActive: 0
   OnSpawn:

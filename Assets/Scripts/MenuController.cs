@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour
 
     [Header("highscores")]
     public HighScoreScreen highscoreScreen;
+    public GameObject creditsScreen;
 
     public void OnClickStart()
     {
@@ -22,9 +23,18 @@ public class MenuController : MonoBehaviour
         highscoreScreen.Show();
     }
 
+    public void OnClickCredits()
+    {
+        creditsScreen.gameObject.SetActive(true);
+    }
+
     public void CloseHighlightscore()
     {
         highscoreScreen.Hide();
+    }
+    public void CloseCredits()
+    {
+        creditsScreen.gameObject.SetActive(false);
     }
     public void OnClickQuit()
     {

@@ -464,8 +464,8 @@ public class Player : MonoBehaviour
         b.transform.position = turret.transform.TransformPoint(Vector3.down * 0.5f);
         var shotDir = -turret.transform.up + (turret.transform.right * index * 0.2f * (index % 2 == 0 ? 1 : -1));
         b.Shoot(shotDir);
-        OnShoot?.Invoke(7);
-        ammo -= 7;
+        OnShoot?.Invoke(10);
+        ammo -= 10;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
         fireSrc.PlayOneShot(fireMissileClip);
     }

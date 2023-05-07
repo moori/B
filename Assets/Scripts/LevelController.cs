@@ -9,14 +9,14 @@ using DG.Tweening;
 public class LevelController : MonoBehaviour
 {
     public LevelData levelData;
-    public int currentLevel = 0;
+    public static int currentLevel;
     public List<Enemy> enemiesAlive = new List<Enemy>();
     public List<Enemy> currentWaveEnemies = new List<Enemy>();
     public List<Enemy> currentRandosEnemies = new List<Enemy>();
     public Enemy currentBoss;
 
-    private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 3 };
-    private int[] randosPerLevelProgression = new int[] { 0, 0, 3, 5, 7, 8, 9, 12, 15};
+    private int[] wavesPerLevelProgression = new int[]  { 2, 2, 3, 3, 3, 3 };
+    private int[] randosPerLevelProgression = new int[] { 0, 0, 4, 7, 8, 8, 9, 12, 15, 20};
 
     [Header("DBs")]
     public List<SpawnGroup> waveDB;
@@ -37,6 +37,8 @@ public class LevelController : MonoBehaviour
 
     private void Awake()
     {
+        currentLevel = 4;
+
         rand = new System.Random();
         Enemy.OnEnemyDeath += OnEnemyDeath;
 
@@ -44,6 +46,7 @@ public class LevelController : MonoBehaviour
         PrespawnBosses();
 
         GameController.OnGameOver += Stop;
+
     }
 
     private void Stop()
@@ -83,9 +86,11 @@ public class LevelController : MonoBehaviour
     {
         foreach (var b in bossDB)
         {
+            var prefab = b.boss;
             b.boss = Instantiate<Enemy>(b.boss);
             b.boss.transform.SetParent(transform);
             b.boss.gameObject.SetActive(false);
+            b.boss.gameObject.name = prefab.gameObject.name;
         }
     }
 
@@ -200,6 +205,7 @@ public class LevelController : MonoBehaviour
                 enemy.Respawn(pos);
                 currentWaveEnemies.Add(enemy);
                 enemiesAlive.Add(enemy);
+                enemy.healthComponent.IncreaseMaxHPOVerOriginal(LevelController.currentLevel * 5);
             }
             yield return new WaitForSeconds(group.delayBetweenSpawns);
         }
@@ -243,16 +249,16 @@ public class LevelController : MonoBehaviour
         int waveProg = levelIndex <= wavesPerLevelProgression.Length - 1 ? wavesPerLevelProgression[levelIndex] : wavesPerLevelProgression.Last();
         int randosProg = levelIndex <= randosPerLevelProgression.Length - 1 ? randosPerLevelProgression[levelIndex] : randosPerLevelProgression.Last();
 
-        SpawnGroup lastPicked = null;
+        string lastPicked = "";
         for (int i = 0; i < waveProg; i++)
         {
             SpawnGroup w = Instantiate(waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel).ToList().GetRandom());  
-            while (w == lastPicked)
+            while (w.name == lastPicked)
             {
                 w = waveDB.Where(x => levelIndex >= x.minLevel && levelIndex <= x.maxLevel ).ToList().GetRandom();
             }
             Debug.Log($"Loading wave groud: {w.name}");
-            lastPicked = w;
+            lastPicked = w.name;
             level.mainSequence.Add(w);
         }
         Debug.Log($"Adding {randosProg} randos");
