@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959517171022689195}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -271,7 +271,7 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!1 &959517171261259595
 GameObject:
@@ -463,7 +463,7 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!1 &959517171994261091
 GameObject:
@@ -532,7 +532,7 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!1 &959517172710356884
 GameObject:
@@ -737,7 +737,7 @@ MonoBehaviour:
   delayBetweenAttacks: 6
   delayBetweenVolleys: 1
   angleError: 0
-  shootsBattery: 1
+  bulletType: 1
   directionsAmount: 16
 --- !u!1 &959517172989466780
 GameObject:
@@ -10936,7 +10936,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3769562776125817649}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10978,7 +10978,7 @@ MonoBehaviour:
   delayBetweenAttacks: 2
   delayBetweenVolleys: 0
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!1 &4599992004343911796
 GameObject:

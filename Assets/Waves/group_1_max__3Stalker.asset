@@ -19,7 +19,7 @@ MonoBehaviour:
     radius: 0
   - spawnable: 1
     region: 0
-    point: {x: 0, y: 3, z: 0}
+    point: {x: 0, y: -3, z: 0}
     radius: 0
   - spawnable: 1
     region: 0

@@ -464,8 +464,8 @@ public class Player : MonoBehaviour
         b.transform.position = turret.transform.TransformPoint(Vector3.down * 0.5f);
         var shotDir = -turret.transform.up + (turret.transform.right * index * 0.2f * (index % 2 == 0 ? 1 : -1));
         b.Shoot(shotDir);
-        OnShoot?.Invoke(5);
-        ammo -= 5;
+        OnShoot?.Invoke(7);
+        ammo -= 7;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
         fireSrc.PlayOneShot(fireMissileClip);
     }
@@ -489,7 +489,7 @@ public class Player : MonoBehaviour
         canTakeDamage = false;
         timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
-        Recharge(-.15f *BASE_MAX_AMMO/maxAmmo);
+        Recharge(-.2f* damage * BASE_MAX_AMMO/maxAmmo);
         if (ammo <= 0)
         {
             Die();

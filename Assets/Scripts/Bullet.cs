@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     Collider2D[] detectionHitsBuffer = new Collider2D[8];
 
     public static System.Action OnBulletHit;
+    public UnityEvent OnBulletHitEvent;
     public UnityEvent OnBulletSpawn;
 
     [Header("Tracking")]
@@ -109,6 +110,7 @@ public class Bullet : MonoBehaviour
 
             gameObject.SetActive(false);
             OnBulletHit?.Invoke();
+            OnBulletHitEvent?.Invoke();
             AudioManager.GetAudioSource().PlayOneShot(hitClip, 0.8f);
         }
     }

@@ -355,7 +355,7 @@ MonoBehaviour:
   delayBetweenAttacks: 10
   delayBetweenVolleys: 1
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!1 &1134726800886871548
 GameObject:
@@ -899,7 +899,7 @@ MonoBehaviour:
   delayBetweenAttacks: 5
   delayBetweenVolleys: 1
   angleError: 0
-  shootsBattery: 1
+  bulletType: 1
   directionsAmount: 24
 --- !u!1 &1309288698903874757
 GameObject:
@@ -17114,7 +17114,7 @@ MonoBehaviour:
     m_Bits: 64
   laserCenter: {x: 0, y: 14}
   laserSize: {x: 0.3, y: 28}
-  damage: 1
+  damage: 5
 --- !u!114 &4710797962199037282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22183,11 +22183,11 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   initialDelay: 0
   delayBetweenShots: 0.125
-  volleysPerAttack: 2
+  volleysPerAttack: 3
   delayBetweenAttacks: 6
   delayBetweenVolleys: 0
   angleError: 0
-  shootsBattery: 0
+  bulletType: 0
   directionsAmount: 16
 --- !u!114 &4710797962595374252
 MonoBehaviour:
@@ -71439,7 +71439,7 @@ MonoBehaviour:
     m_Bits: 64
   laserCenter: {x: 0, y: 14}
   laserSize: {x: 0.3, y: 28}
-  damage: 1
+  damage: 5
 --- !u!114 &1586433386988489298
 MonoBehaviour:
   m_ObjectHideFlags: 0

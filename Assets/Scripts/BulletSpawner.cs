@@ -13,8 +13,8 @@ public class BulletSpawner : MonoBehaviour
     public float delayBetweenVolleys = 0f;
     public float angleError = 0f;
 
-    [Header("Battery")]
-    public bool shootsBattery;
+    [Header("Bullet")]
+    public BulletType bulletType;
 
     [Header("Generator")]
     public int directionsAmount;
@@ -25,6 +25,13 @@ public class BulletSpawner : MonoBehaviour
         FireSequence
     }
 
+
+    public enum BulletType
+    {
+        Arrow,
+        Battery,
+        Missile
+    }
     private void OnEnable()
     {
         StartCoroutine(FireAllRoutine());
@@ -68,14 +75,20 @@ public class BulletSpawner : MonoBehaviour
     public void Shoot(Vector3 direction)
     {
         Bullet bullet = null;
-        if (shootsBattery)
+        switch (bulletType)
         {
-            bullet = PoolManager.instance.GetEnemyBatteryBullet();
+            default:
+            case BulletType.Arrow:
+                bullet = PoolManager.instance.GetEnemyArrowBullet();
+                break;
+            case BulletType.Battery:
+                bullet = PoolManager.instance.GetEnemyBatteryBullet();
+                break;
+            case BulletType.Missile:
+                bullet = PoolManager.instance.GetEnemyMissileBullet();
+                break;
         }
-        else
-        {
-            bullet = PoolManager.instance.GetEnemyArrowBullet();
-        }
+
         if (bullet == null) return;
         bullet.transform.position = transform.position;
         bullet.Shoot(transform.TransformVector(direction));
@@ -83,7 +96,7 @@ public class BulletSpawner : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-
+        if (fireLocalDirections == null) return;
         for (int i = 0; i < fireLocalDirections.Count; i++)
         {
             Gizmos.color = Color.red;

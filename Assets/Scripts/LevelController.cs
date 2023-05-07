@@ -15,8 +15,8 @@ public class LevelController : MonoBehaviour
     public List<Enemy> currentRandosEnemies = new List<Enemy>();
     public Enemy currentBoss;
 
-    private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 3, 4, 4 };
-    private int[] randosPerLevelProgression = new int[] { 0, 0, 3, 5, 5, 6, 7, 8, 9};
+    private int[] wavesPerLevelProgression = new int[] { 2, 2, 3, 3, 3, 3 };
+    private int[] randosPerLevelProgression = new int[] { 0, 0, 3, 5, 7, 8, 9, 12, 15};
 
     [Header("DBs")]
     public List<SpawnGroup> waveDB;
@@ -191,7 +191,7 @@ public class LevelController : MonoBehaviour
                     enemy = PoolManager.instance.GetStalkerEnemy();
                     break;
                 case Spawnable.LasetTurret:
-                    enemy = PoolManager.instance.GetLAserTurretEnemy();
+                    enemy = PoolManager.instance.GetLaserTurretEnemy();
                     break;
             }
 

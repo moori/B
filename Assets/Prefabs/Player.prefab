@@ -1961,7 +1961,6 @@ MonoBehaviour:
   bubbleRadius: 0.7
   bubbleDuration: 2.5
   shieldRechargeDuration: 5
-  isBubbling: 0
   bubbleSprite: {fileID: 2086387326214938103}
   bubbleShadowSprite: {fileID: 1028230136}
   collectibleLayerMask:

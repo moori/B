@@ -52,7 +52,8 @@ public enum Spawnable
 {
     StaticMinion,
     Stalker,
-    LasetTurret
+    LasetTurret,
+    MissileTurret
 }
 
 public enum Region

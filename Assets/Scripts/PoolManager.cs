@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,17 +10,20 @@ public class PoolManager : MonoBehaviour
     public Pool playerBulletPool;
     public Pool enemyArrowBulletPool;
     public Pool enemyBatteryBulletPool;
+    public Pool enemyMissileBulletPool;
     public Pool explosionParticletPool;
+    public Pool smallRedExplosionParticletPool;
     public Pool dummyEnemyPool;
     public Pool simpleEnemyPool;
     public Pool stalkerEnemyPool;
-    public Pool laserTurretEnemyPool;
+    public Pool laserTurretEnemyPool; 
+    public Pool missileTurretEnemyPool;
     public Pool pulsePool;
     public Pool batteryPool;
     public Pool coinPool;
     public Pool batteryShardPool;
     public Pool shieldHitParticlePool;
-    public Pool trackingBulletPool;
+    public Pool trackingBulletPool; 
 
     private void Awake()
     {
@@ -50,6 +54,10 @@ public class PoolManager : MonoBehaviour
     {
         return enemyBatteryBulletPool.GetItem().GetComponent<Bullet>();
     }
+    public Bullet GetEnemyMissileBullet()
+    {
+        return enemyMissileBulletPool.GetItem().GetComponent<Bullet>();
+    }
     public Bullet GetTrackingBullet()
     {
         return trackingBulletPool.GetItem().GetComponent<Bullet>();
@@ -57,6 +65,11 @@ public class PoolManager : MonoBehaviour
     public ParticleSystem GetExplosionParticles()
     {
         return explosionParticletPool.GetItem().GetComponent<ParticleSystem>();
+    }
+    
+    public ParticleSystem GetSmallRedExplosionParticles()
+    {
+        return smallRedExplosionParticletPool.GetItem().GetComponent<ParticleSystem>();
     }
     public Enemy GetDummyEnemy()
     {
@@ -70,9 +83,13 @@ public class PoolManager : MonoBehaviour
     {
         return stalkerEnemyPool.GetItem().GetComponent<Enemy>();
     }
-    public Enemy GetLAserTurretEnemy()
+    public Enemy GetLaserTurretEnemy()
     {
         return laserTurretEnemyPool.GetItem().GetComponent<Enemy>();
+    }
+    public Enemy GetMissileTurretEnemy()
+    {
+        return missileTurretEnemyPool.GetItem().GetComponent<Enemy>();
     }
     public Pulse GetPulse()
     {
@@ -82,6 +99,8 @@ public class PoolManager : MonoBehaviour
     {
         return batteryPool.GetItem().GetComponent<Battery>();
     }
+
+
     public Coin GetCoin()
     {
         return coinPool.GetItem().GetComponent<Coin>();
