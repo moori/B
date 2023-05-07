@@ -5,11 +5,12 @@ using DG.Tweening;
 
 public class LaserWeapon : MonoBehaviour
 {
-    private Enemy enemy;
     public SpriteRenderer aimSprite;
     public SpriteRenderer fireSprite;
     public ParticleSystem chargePart;
     public ParticleSystem firePart;
+
+    public FacePlayer facePlayerComponent;
 
     [Header("Attack")]
     public float delayBetweenAttacks;
@@ -24,10 +25,6 @@ public class LaserWeapon : MonoBehaviour
     Collider2D[] hitsBuffer = new Collider2D[1];
     private bool isFiring;
 
-    private void Awake()
-    {
-        enemy = GetComponentInParent<Enemy>();
-    }
     private void OnEnable()
     {
         StartCoroutine(AttackRoutine());
@@ -41,8 +38,9 @@ public class LaserWeapon : MonoBehaviour
         StopAllCoroutines();
         isFiring = false;
         fireSprite.transform.DOScaleX(0f, .15f);
-        enemy.facePlayer = true;
+        facePlayerComponent.enabled = true;
         firePart.gameObject.SetActive(false);
+        GameController.OnGameOver -= Stop;
     }
 
     public void Stop()
@@ -50,7 +48,7 @@ public class LaserWeapon : MonoBehaviour
         StopAllCoroutines(); 
         isFiring = false;
         fireSprite.transform.DOScaleX(0f, .15f);
-        enemy.facePlayer = true;
+        facePlayerComponent.enabled = true;
         firePart.gameObject.SetActive(false);
         chargePart.gameObject.SetActive(false);
         aimSprite.gameObject.SetActive(false);
@@ -66,7 +64,7 @@ public class LaserWeapon : MonoBehaviour
             yield return new WaitForSeconds(aimdDuration);
 
 
-            enemy.facePlayer = false;
+            facePlayerComponent.enabled = false;
             chargePart.gameObject.SetActive(true);
             aimSprite.transform.localScale = new Vector3(0.06f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z); 
             yield return new WaitForSeconds(stillBeforeShotDuration);
@@ -81,7 +79,7 @@ public class LaserWeapon : MonoBehaviour
 
             isFiring = false;
             fireSprite.transform.DOScaleX(0f, .15f);
-            enemy.facePlayer = true;
+            facePlayerComponent.enabled = true;
             firePart.gameObject.SetActive(false);
             aimSprite.transform.localScale = new Vector3(0.03f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z);
             yield return new WaitForSeconds(delayBetweenAttacks);

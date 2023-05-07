@@ -51,12 +51,13 @@ public class Player : MonoBehaviour
     public UnityEvent<int,int> OnAmmoChange;
     public UnityEvent<float> OnRecharge;
     public UnityEvent OnDie;
+    public static System.Action<bool> OnBubbleEnable;
 
     [Header("Bubble")]
     public float bubbleRadius;
     public float bubbleDuration;
     public float shieldRechargeDuration;
-    public bool isBubbling;
+    public static bool isBubbling;
     public SpriteRenderer bubbleSprite;
     public SpriteRenderer bubbleShadowSprite;
     public LayerMask collectibleLayerMask;
@@ -64,6 +65,9 @@ public class Player : MonoBehaviour
     public GameObject shieldIndicator;
     private float bubbleStartTime;
     public UnityEvent OnShieldReady;
+    public Color green;
+    public Color purple;
+    public List<SpriteRenderer> modelSprites;
     private bool canActivateShield => shieldCounters.Any(x => x.isFull);
 
     [Header("Coins")]
@@ -82,9 +86,14 @@ public class Player : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource fireSrc;
-    public AudioSource audidoSrc;
     public AudioClip collectCoinClip;
     public AudioClip damageClip;
+    public AudioClip fireMissileClip;
+    public AudioClip rechargeSmallClip;
+    public AudioClip rechargeBigClip;
+    public AudioClip armourHitClip;
+    public AudioClip bubbleUpClip;
+    public AudioClip shieldReadyClip;
 
 
     [Header("Upgrades")]
@@ -119,6 +128,7 @@ public class Player : MonoBehaviour
         //InvokeRepeating("Measure", 1f, 1f);
 
         OnAmmoChange?.Invoke(ammo, maxAmmo);
+        isBubbling = false;
     }
 
 
@@ -194,7 +204,6 @@ public class Player : MonoBehaviour
 
     public void UpgradeMaxHP()
     {
-        Debug.Log("UpgradeMaxHP");
         maxHP_UpgradesUnlocked = Mathf.Clamp(maxHP_UpgradesUnlocked + 1, 0, max_maxHP_UpgradesUnlocked);
         maxAmmo = BASE_MAX_AMMO + Mathf.RoundToInt(BASE_MAX_AMMO * maxHP_UpgradesUnlocked * maxHPUpgradePercent);
         maxAmmo = Mathf.Clamp(maxAmmo, BASE_MAX_AMMO, ABSOLUTE_MAX_AMMO);
@@ -203,24 +212,22 @@ public class Player : MonoBehaviour
 
     public void UpgradeFirerate()
     {
-        Debug.Log("UpgradeFirerate");
         fireRate_UpgradeUnlocks = Mathf.Clamp(fireRate_UpgradeUnlocks + 1, 0, max_fireRate_UpgradeUnlocks);
     }
 
     public void UpgradeShield()
     {
-        Debug.Log("UpgradeShield");
         bubbleSlot_UpgradeUnlocks = Mathf.Clamp(bubbleSlot_UpgradeUnlocks + 1, 1, shieldCounters.Count-1);
 
         for (int i = 1; i < bubbleSlot_UpgradeUnlocks+1; i++)
         {
             shieldCounters[i].gameObject.SetActive(true);
         }
+        SetShieldCounter();
     }
 
     private void UpgradeMissile()
     {
-        Debug.Log("UpgradeMissile");
         missile_UpgradeUnlocks = Mathf.Clamp(missile_UpgradeUnlocks + 1, 0, max_missile_UpgradeUnlocks);
     }
 
@@ -243,6 +250,8 @@ public class Player : MonoBehaviour
                 p.transform.forward = -enemyBullet.transform.up;
                 p.gameObject.SetActive(true);
                 p.Play();
+
+                AudioManager.GetAudioSource().PlayOneShot(armourHitClip);
             }
         }
     }
@@ -270,7 +279,7 @@ public class Player : MonoBehaviour
     private void CollectCoin()
     {
         coins++;
-        audidoSrc.PlayOneShot(collectCoinClip);
+        AudioManager.GetAudioSource().PlayOneShot(collectCoinClip);
         OnCollectCoin?.Invoke(coins);
     }
 
@@ -279,6 +288,18 @@ public class Player : MonoBehaviour
         ammo = Mathf.Clamp(ammo + Mathf.RoundToInt(maxAmmo * percent), 0, maxAmmo);
         OnRecharge?.Invoke(percent);
         OnAmmoChange?.Invoke(ammo,maxAmmo);
+
+        if (percent > 0)
+        {
+            if (percent > 0.5f)
+            {
+                AudioManager.GetAudioSource().PlayOneShot(rechargeBigClip);
+            }
+            else
+            {
+                AudioManager.GetAudioSource().PlayOneShot(rechargeSmallClip);
+            }
+        }
     }
 
     private void HandleMovement()
@@ -333,6 +354,11 @@ public class Player : MonoBehaviour
             {
                 isBubbling = false;
                 bubbleSprite.transform.DOScale(0f, 0.075f);
+                foreach (var item in modelSprites)
+                {
+                    item.color = green;
+                }
+                OnBubbleEnable?.Invoke(false);
             }
         }
         else
@@ -348,6 +374,14 @@ public class Player : MonoBehaviour
                 var shieldCounter = shieldCounters.FirstOrDefault(x => x.isFull);
                 shieldCounter.StartUsing(bubbleDuration);
                 SetShieldCounter();
+
+                foreach (var item in modelSprites)
+                {
+                    item.color = purple;
+                }
+                OnBubbleEnable?.Invoke(true);
+
+                AudioManager.GetAudioSource().PlayOneShot(bubbleUpClip);
             }
         }
 
@@ -380,12 +414,7 @@ public class Player : MonoBehaviour
                     }
                 }
             }
-            if (!fireSrc.isPlaying && ammo > 0)
-            {
-                fireSrc.DOKill();
-                fireSrc.volume = 0.8f;
-                fireSrc.Play();
-            }
+           
 
             if (Time.time - timeLastMissileShot >= delayBetweenMissileShots)
             {
@@ -399,10 +428,10 @@ public class Player : MonoBehaviour
         else
         {
             isShooting = false;
-            if (fireSrc.isPlaying && !DOTween.IsTweening(fireSrc))
-            {
-                fireSrc.DOFade(0f, 0.1f).OnComplete(() => { fireSrc.Stop(); });
-            }
+        }
+        if (Time.time - timeLastShot > delayBetweenShots * 1.1f)
+        {
+            fireSrc.Stop();
         }
     }
 
@@ -419,6 +448,10 @@ public class Player : MonoBehaviour
         ammo -= 1;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
 
+        if (!fireSrc.isPlaying)
+        {
+            fireSrc.Play();
+        }
         shotsFiredLastSecond++;
     }
     private void FireMissile(int index)
@@ -434,6 +467,7 @@ public class Player : MonoBehaviour
         OnShoot?.Invoke(5);
         ammo -= 5;
         OnAmmoChange?.Invoke(ammo, maxAmmo);
+        fireSrc.PlayOneShot(fireMissileClip);
     }
 
     public static Vector3 AddNoiseOnAngle(float min, float max)
@@ -446,7 +480,12 @@ public class Player : MonoBehaviour
 
     public void TakeHit(int damage)
     {
-        if (isBubbling || !canTakeDamage) return;
+        if (isBubbling || !canTakeDamage)
+        {
+            if(Time.time > timeLastDamage + damageCooldown + 0.2f)
+                AudioManager.GetAudioSource().PlayOneShot(armourHitClip);
+            return;
+        }
         canTakeDamage = false;
         timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
@@ -504,6 +543,11 @@ public class Player : MonoBehaviour
         if (shieldCounters.Count(x => x.gameObject.activeInHierarchy && x.isFull && !x.isInUse) == 0)
         {
             bubbleShadowSprite.DOFade(0f, .25f);
+        }
+
+        if (canActivateShield)
+        {
+            AudioManager.GetAudioSource().PlayOneShot(shieldReadyClip);
         }
     }
 }

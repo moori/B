@@ -6,6 +6,7 @@ public class BulletSpawner : MonoBehaviour
 {
     public List<Vector3> fireLocalDirections;
 
+    public float initialDelay=0;
     public float delayBetweenShots=0.035f;
     public int volleysPerAttack = 1;
     public float delayBetweenAttacks = 2f;
@@ -30,14 +31,22 @@ public class BulletSpawner : MonoBehaviour
         GameController.OnGameOver += Stop;
     }
 
+    private void OnDisable()
+    {
+        Stop();
+    }
+
     public void Stop()
     {
         StopAllCoroutines();
         GameController.OnGameOver -= Stop;
     }
+
+
+
     public IEnumerator FireAllRoutine()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(3f+ initialDelay);
         while (true)
         {
             for (int j = 0; j < volleysPerAttack; j++)

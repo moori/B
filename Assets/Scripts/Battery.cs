@@ -13,9 +13,16 @@ public class Battery : MonoBehaviour
     public Vector3 moveDirection;
     public bool isActive;
     public UnityEvent OnSpawn;
+    public ParticleSystem bubbleResonancePart;
     private void OnEnable()
     {
+        OnBubbleEnable(Player.isBubbling);
         modelTransform.DOLocalRotate(new Vector3(30, 90, 120), 1f).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
+        Player.OnBubbleEnable += OnBubbleEnable;
+    }
+    private void OnDisable()
+    {
+        Player.OnBubbleEnable -= OnBubbleEnable;
     }
 
     private void Update()
@@ -23,6 +30,11 @@ public class Battery : MonoBehaviour
         if (!isActive) return;
 
         transform.position += moveDirection * speed * Time.deltaTime;
+    }
+
+    public void OnBubbleEnable(bool isEnabled)
+    {
+        bubbleResonancePart.gameObject.SetActive(isEnabled);
     }
 
     public void SpawnBattery(Vector3 moveDir)
@@ -42,5 +54,6 @@ public class Battery : MonoBehaviour
     {
         gameObject.SetActive(false);
         isActive = false;
+        OnBubbleEnable(false);
     }
 }

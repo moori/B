@@ -53,6 +53,7 @@ public class LevelController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Stop();
         Enemy.OnEnemyDeath -= OnEnemyDeath;
     }
 

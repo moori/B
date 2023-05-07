@@ -31,6 +31,11 @@ public class UpgradeShip : MonoBehaviour
     public float hidePositionY = 14f;
     public float showPositionY = 0f;
 
+    [Header("Audio")]
+    public AudioSource source;
+    public AudioClip UpgradeCompleteClip;
+    public AudioClip chargingClip;
+
     public enum UpgradeType
     {
         None,
@@ -100,6 +105,7 @@ public class UpgradeShip : MonoBehaviour
             {
                 isConfirming = true;
                 starTime = Time.time;
+                source.Play();
             }
 
             var percent = (Time.time - starTime) / timeToConfirm;
@@ -111,6 +117,7 @@ public class UpgradeShip : MonoBehaviour
             {
                 isActive = false;
                 explosion.gameObject.SetActive(true);
+                AudioManager.GetAudioSource().PlayOneShot(UpgradeCompleteClip);
                 modelTransform.DOLocalRotate(Vector3.zero, .5f).SetEase(Ease.InQuad).OnComplete(()=> {
                     hitsBuffer[0].GetComponent<Player>().ApplyUpgrade(upgradeType);
                     OnUpgrade?.Invoke();
@@ -122,6 +129,7 @@ public class UpgradeShip : MonoBehaviour
             isConfirming = false;
             fill.transform.localScale = Vector3.zero;
             modelTransform.rotation = Quaternion.identity;
+            source.Stop();
         }
     }
 

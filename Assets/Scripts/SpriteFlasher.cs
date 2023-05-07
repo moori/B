@@ -35,7 +35,7 @@ public class SpriteFlasher : MonoBehaviour
 
     public void Flash()
     {
-        if (isFlashing) return;
+        if (isFlashing || !gameObject.activeInHierarchy) return;
 
         StartCoroutine(FlashRoutine());
     }

@@ -265,6 +265,7 @@ MonoBehaviour:
   - {x: 0.3826836, y: -0.92387944, z: 0}
   - {x: 0.70710665, y: -0.7071069, z: 0}
   - {x: 0.92387956, y: -0.38268343, z: 0}
+  initialDelay: 0
   delayBetweenShots: 0.125
   volleysPerAttack: 4
   delayBetweenAttacks: 2
@@ -456,6 +457,7 @@ MonoBehaviour:
   - {x: 0.3826836, y: -0.92387944, z: 0}
   - {x: 0.70710665, y: -0.7071069, z: 0}
   - {x: 0.92387956, y: -0.38268343, z: 0}
+  initialDelay: 0
   delayBetweenShots: 0.125
   volleysPerAttack: 4
   delayBetweenAttacks: 2
@@ -524,6 +526,7 @@ MonoBehaviour:
   - {x: 0.3826836, y: -0.92387944, z: 0}
   - {x: 0.70710665, y: -0.7071069, z: 0}
   - {x: 0.92387956, y: -0.38268343, z: 0}
+  initialDelay: 0
   delayBetweenShots: 0.125
   volleysPerAttack: 4
   delayBetweenAttacks: 2
@@ -678,7 +681,7 @@ GameObject:
   - component: {fileID: 959517172950170904}
   - component: {fileID: 959517172950170905}
   m_Layer: 7
-  m_Name: Turret curcle
+  m_Name: Turret circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -728,6 +731,7 @@ MonoBehaviour:
   - {x: 0.3826836, y: -0.92387944, z: 0}
   - {x: 0.70710665, y: -0.7071069, z: 0}
   - {x: 0.92387956, y: -0.38268343, z: 0}
+  initialDelay: 1
   delayBetweenShots: -1
   volleysPerAttack: 3
   delayBetweenAttacks: 6
@@ -10968,6 +10972,7 @@ MonoBehaviour:
   - {x: 0.3826836, y: -0.92387944, z: 0}
   - {x: 0.70710665, y: -0.7071069, z: 0}
   - {x: 0.92387956, y: -0.38268343, z: 0}
+  initialDelay: 0
   delayBetweenShots: 0.125
   volleysPerAttack: 4
   delayBetweenAttacks: 2

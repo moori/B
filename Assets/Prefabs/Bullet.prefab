@@ -62,7 +62,7 @@ MonoBehaviour:
   turningSpeed: 0
   detectionRadius: 0
   target: {fileID: 0}
-  hitClip: {fileID: 8300000, guid: 65e42605773483945bb3fbbf571e50b9, type: 3}
+  hitClip: {fileID: 8300000, guid: e5f105a867e29ff4b965e9828fbbc2e9, type: 3}
 --- !u!114 &3795332683189810272
 MonoBehaviour:
   m_ObjectHideFlags: 0
