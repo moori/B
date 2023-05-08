@@ -19,6 +19,13 @@ public class BulletSpawner : MonoBehaviour
     [Header("Generator")]
     public int directionsAmount;
 
+
+    [Header("Audio")]
+    public AudioSource source;
+    public AudioClip attackClip;
+    public AudioClip volleyClip;
+    public AudioClip shotClip;
+
     enum AttackType
     {
         FireAll,
@@ -49,20 +56,36 @@ public class BulletSpawner : MonoBehaviour
         GameController.OnGameOver -= Stop;
     }
 
+    public void PlayClip(AudioClip clip)
+    {
+        if (clip == null) return;
+        if (source == null)
+        {
+            AudioManager.GetAudioSource().PlayOneShot(clip);
+            return;
+        }
+        if (source.isPlaying) return;
 
+        source.clip = clip;
+        source.Play();
+    }
 
     public IEnumerator FireAllRoutine()
     {
         yield return new WaitForSeconds(3f+ initialDelay);
         while (true)
         {
+
+            PlayClip(attackClip);
             for (int j = 0; j < volleysPerAttack; j++)
             {
+                PlayClip(volleyClip);
 
                 for (int i = 0; i < fireLocalDirections.Count; i++)
                 {
                     Shoot(fireLocalDirections[i] + Player.AddNoiseOnAngle(-angleError,angleError));
-                    if(delayBetweenShots>0)
+                    PlayClip(shotClip);
+                    if (delayBetweenShots>0)
                         yield return new WaitForSeconds(delayBetweenShots);
                 }
                 if (delayBetweenVolleys > 0)

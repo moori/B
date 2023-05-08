@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 2
-  speed: 4
+  speed: 3.5
   isDead: 0
   lifetime: 20
   targetLayerMask:
@@ -245,6 +245,9 @@ MonoBehaviour:
     m_Bits: 64
   collisionOffset: {x: 0, y: 0, z: 0}
   radius: 0.1
+  OnBulletHitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnBulletSpawn:
     m_PersistentCalls:
       m_Calls: []
@@ -253,6 +256,7 @@ MonoBehaviour:
   detectionRadius: 10
   target: {fileID: 0}
   hitClip: {fileID: 8300000, guid: 65e42605773483945bb3fbbf571e50b9, type: 3}
+  spawnClip: {fileID: 0}
 --- !u!114 &1375649202908005545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11fb78b3e7b6823489611dd423cd2f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 10
+  maxHP: 8
   HP: 0
   OnDie:
     m_PersistentCalls:

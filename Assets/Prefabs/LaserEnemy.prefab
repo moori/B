@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7786898253471651527}
   - component: {fileID: 7786898253471651544}
+  - component: {fileID: 1899362505218067879}
   m_Layer: 7
   m_Name: LaserTurret
   m_TagString: Untagged
@@ -63,6 +64,105 @@ MonoBehaviour:
   laserCenter: {x: 0, y: 14}
   laserSize: {x: 0.3, y: 28}
   damage: 5
+  source: {fileID: 1899362505218067879}
+  chargingClip: {fileID: 8300000, guid: 0701590ccf3c35c40be5116d75dc2f4d, type: 3}
+  fireClip: {fileID: 8300000, guid: e07bdc11d3abe5a449d26d2cebebca8f, type: 3}
+--- !u!82 &1899362505218067879
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590357382368353195}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &803431372603647138
 GameObject:
   m_ObjectHideFlags: 0
@@ -39459,6 +39559,7 @@ MonoBehaviour:
   speed: 0
   movePattern: 0
   moveTargetsRelativeToPlayer: []
+  moveTargetsAbsolute: []
   coinAmount: 8
   baseEnergyShardAmount: 2
   batteryTimers:
@@ -39474,6 +39575,10 @@ MonoBehaviour:
   spawnClip: {fileID: 8300000, guid: 7f386aaf3f8bbe341bd2776fe7fd4e91, type: 3}
   spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
   deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
+  wasPromoted: 0
+  promotionSprite: {fileID: 0}
+  hpIncreasePerLevel: []
+  scaleIncreasePerLevel: []
 --- !u!114 &6594063222126557002
 MonoBehaviour:
   m_ObjectHideFlags: 0

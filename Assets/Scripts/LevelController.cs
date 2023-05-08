@@ -37,7 +37,7 @@ public class LevelController : MonoBehaviour
 
     private void Awake()
     {
-        currentLevel = 4;
+        currentLevel = 0;
 
         rand = new System.Random();
         Enemy.OnEnemyDeath += OnEnemyDeath;
@@ -198,6 +198,9 @@ public class LevelController : MonoBehaviour
                 case Spawnable.LasetTurret:
                     enemy = PoolManager.instance.GetLaserTurretEnemy();
                     break;
+                case Spawnable.MissileTurret:
+                    enemy = PoolManager.instance.GetMissileTurretEnemy();
+                    break;
             }
 
             if (enemy)
@@ -205,7 +208,7 @@ public class LevelController : MonoBehaviour
                 enemy.Respawn(pos);
                 currentWaveEnemies.Add(enemy);
                 enemiesAlive.Add(enemy);
-                enemy.healthComponent.IncreaseMaxHPOVerOriginal(LevelController.currentLevel * 5);
+                enemy.healthComponent.IncreaseMaxHPOVerOriginal(LevelController.currentLevel * 1);
             }
             yield return new WaitForSeconds(group.delayBetweenSpawns);
         }

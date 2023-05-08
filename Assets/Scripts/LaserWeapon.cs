@@ -25,6 +25,11 @@ public class LaserWeapon : MonoBehaviour
     Collider2D[] hitsBuffer = new Collider2D[1];
     private bool isFiring;
 
+    [Header("Audio")]
+    public AudioSource source;
+    public AudioClip chargingClip;
+    public AudioClip fireClip;
+
     private void OnEnable()
     {
         StartCoroutine(AttackRoutine());
@@ -66,8 +71,12 @@ public class LaserWeapon : MonoBehaviour
 
             facePlayerComponent.enabled = false;
             chargePart.gameObject.SetActive(true);
-            aimSprite.transform.localScale = new Vector3(0.06f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z); 
+            aimSprite.transform.localScale = new Vector3(0.06f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z);
+            source.clip = chargingClip;
+            source.loop = true;
+            source.Play();
             yield return new WaitForSeconds(stillBeforeShotDuration);
+            source.Stop();
 
 
             isFiring = true;
@@ -75,7 +84,11 @@ public class LaserWeapon : MonoBehaviour
             fireSprite.transform.DOScaleX(laserSize.x, .15f);
             firePart.gameObject.SetActive(true);
             chargePart.gameObject.SetActive(false);
+            source.clip = fireClip;
+            source.loop = true;
+            source.Play();
             yield return new WaitForSeconds(laserDuration);
+            source.Stop();
 
             isFiring = false;
             fireSprite.transform.DOScaleX(0f, .15f);
@@ -83,6 +96,7 @@ public class LaserWeapon : MonoBehaviour
             firePart.gameObject.SetActive(false);
             aimSprite.transform.localScale = new Vector3(0.03f, aimSprite.transform.localScale.y, aimSprite.transform.localScale.z);
             yield return new WaitForSeconds(delayBetweenAttacks);
+
         }
     }
 

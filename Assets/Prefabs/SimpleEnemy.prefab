@@ -160,6 +160,9 @@ MonoBehaviour:
   angleError: 0
   bulletType: 0
   directionsAmount: 0
+  attackClip: {fileID: 8300000, guid: c8de9e8ffd18d5046b41a9ae28bc295f, type: 3}
+  volleyClip: {fileID: 0}
+  shotClip: {fileID: 0}
 --- !u!1 &1187402248686004150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,6 +1198,7 @@ MonoBehaviour:
   speed: 0
   movePattern: 0
   moveTargetsRelativeToPlayer: []
+  moveTargetsAbsolute: []
   coinAmount: 8
   baseEnergyShardAmount: 2
   batteryTimers:
@@ -1210,6 +1214,10 @@ MonoBehaviour:
   spawnClip: {fileID: 8300000, guid: 34b1a35a5a3e9774a9279200dff9db89, type: 3}
   spawnPulseClip: {fileID: 8300000, guid: 85092683bad157244a7ecb1a75b1c78d, type: 3}
   deathClip: {fileID: 8300000, guid: 53976ed81d4b36f4b93bbb978f284468, type: 3}
+  wasPromoted: 0
+  promotionSprite: {fileID: 0}
+  hpIncreasePerLevel: []
+  scaleIncreasePerLevel: []
 --- !u!114 &6408604097674909345
 MonoBehaviour:
   m_ObjectHideFlags: 0

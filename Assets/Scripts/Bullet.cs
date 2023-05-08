@@ -28,6 +28,7 @@ public class Bullet : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip hitClip;
+    public AudioClip spawnClip;
 
     public void Shoot(Vector3 direction)
     {
@@ -38,6 +39,9 @@ public class Bullet : MonoBehaviour
         OnBulletSpawn?.Invoke();
 
         target = null;
+
+        if(spawnClip)
+            AudioManager.GetAudioSource().PlayOneShot(spawnClip);
     }
 
     public void Kill()

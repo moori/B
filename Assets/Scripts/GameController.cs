@@ -205,12 +205,17 @@ public class GameController : MonoBehaviour
             if (levelController.enemiesAlive.Count <= 0) yield return new WaitForSeconds(5f);
 
             var ammoPercent = player.ammo / (float)player.maxAmmo;
-            if (ammoPercent < .2f)
+            if (ammoPercent <= .01f)
+            {
+                SpawnBattery();
+                yield return new WaitForSeconds(5f);
+            }
+            else   if (ammoPercent < .2f)
             {
                 if (Random.value <= .5f)
                 {
                     SpawnBattery();
-                    yield return new WaitForSeconds(10f);
+                    yield return new WaitForSeconds(6f);
                 }
             }
             else if (ammoPercent < .5f)
@@ -218,7 +223,7 @@ public class GameController : MonoBehaviour
                 if (Random.value <= .2f)
                 {
                     SpawnBattery();
-                    yield return new WaitForSeconds(10f);
+                    yield return new WaitForSeconds(7f);
                 }
             }
             yield return new WaitForSeconds(10f);
