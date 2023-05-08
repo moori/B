@@ -9,7 +9,8 @@ public class UpgradePhaseController : MonoBehaviour
 
     private Player player;
 
-    private bool isActive;
+    [HideInInspector]
+    public bool isActive;
     private LevelController levelController;
 
     public List<UpgradeShip.UpgradeType> randomUpgrade = new List<UpgradeShip.UpgradeType>() {

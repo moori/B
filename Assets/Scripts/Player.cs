@@ -327,11 +327,11 @@ public class Player : MonoBehaviour
         }
 
         var cableVector = aimReference - transform.position;
-        //if (cableVector.magnitude > aimReferenceMagnitude)
-        //{
-        //    aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
-        //}
-        aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
+        if (cableVector.magnitude > aimReferenceMagnitude)
+        {
+            aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
+        }
+        //aimReference = transform.position + (cableVector.normalized * aimReferenceMagnitude);
 
 
         turret.rotation = Quaternion.LookRotation(Vector3.forward, aimReference - transform.position);
@@ -489,7 +489,7 @@ public class Player : MonoBehaviour
         canTakeDamage = false;
         timeLastDamage = Time.time;
         CameraController.instance.Shake(0.2f, 0.6f);
-        Recharge(-.2f* damage * BASE_MAX_AMMO/maxAmmo);
+        Recharge(-.1f* damage * BASE_MAX_AMMO/maxAmmo);
         if (ammo <= 0)
         {
             Die();

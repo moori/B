@@ -462,6 +462,7 @@ MonoBehaviour:
   angleError: 0
   bulletType: 2
   directionsAmount: 0
+  source: {fileID: 0}
   attackClip: {fileID: 0}
   volleyClip: {fileID: 0}
   shotClip: {fileID: 8300000, guid: 1310b87cc11d6594b8abe2b084d75348, type: 3}
@@ -1146,7 +1147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11fb78b3e7b6823489611dd423cd2f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 30
+  maxHP: 25
   HP: 0
   OnDie:
     m_PersistentCalls:

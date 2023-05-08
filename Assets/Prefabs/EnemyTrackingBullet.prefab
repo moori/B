@@ -198,6 +198,8 @@ GameObject:
   - component: {fileID: 2821962047183484401}
   - component: {fileID: 1375649202908005545}
   - component: {fileID: 8201011277132013082}
+  - component: {fileID: 7398454961853699406}
+  - component: {fileID: 2449770649386952871}
   m_Layer: 9
   m_Name: EnemyTrackingBullet
   m_TagString: Untagged
@@ -239,7 +241,7 @@ MonoBehaviour:
   damage: 2
   speed: 3.5
   isDead: 0
-  lifetime: 20
+  lifetime: 10
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -282,6 +284,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolType: 0
+--- !u!50 &7398454961853699406
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2821962047183484402}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!58 &2449770649386952871
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2821962047183484402}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!1 &4760614730995504239
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +509,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.2
+  m_Radius: 0.4
 --- !u!114 &1951752702168920999
 MonoBehaviour:
   m_ObjectHideFlags: 0

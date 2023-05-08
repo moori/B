@@ -16,7 +16,8 @@ public class LevelController : MonoBehaviour
     public Enemy currentBoss;
 
     private int[] wavesPerLevelProgression = new int[]  { 2, 2, 3, 3, 3, 3 };
-    private int[] randosPerLevelProgression = new int[] { 0, 0, 4, 7, 8, 8, 9, 12, 15, 20};
+    private int[] randosPerLevelProgression = new int[] { 0, 0, 3, 5, 7, 8, 9, 12, 15, 20};
+    private int[] randosinBossProgression = new int[]   { 0, 0, 2, 3, 3, 4, 4, 5, 5, 5};
 
     [Header("DBs")]
     public List<SpawnGroup> waveDB;
@@ -122,7 +123,7 @@ public class LevelController : MonoBehaviour
 
     private void EvaluateWave()
     {
-        if (GameController.IsGameOver || TutorialController.IsTutorial) return;
+        if (GameController.IsGameOver || TutorialController.IsTutorial || (currentBoss != null && currentBoss.isActive)) return;
         if (currentWaveEnemies.Count == 0 )
         {
             //end wave
@@ -159,6 +160,14 @@ public class LevelController : MonoBehaviour
         boss.Respawn(levelData.boss.point);
         currentBoss = boss;
 
+
+        yield return new WaitForSeconds(5f);
+        for (int i = 0; i < randosinBossProgression[currentLevel]; i++)
+        {
+            SpawnEnemy(randosDB.GetRandom());
+            yield return new WaitForSeconds(.33f);
+        }
+
         //AudioManager.PlayBossMusic();
     }
 
@@ -185,32 +194,37 @@ public class LevelController : MonoBehaviour
         waveTimer = StartCoroutine(WaveDurationRoutine(group.waveDuration));
         foreach (var spawnData in group.spawns)
         {
-            var pos = spawnData.GetPositionInRegion();
-            Enemy enemy = null;
-            switch (spawnData.spawnable)
-            {
-                case Spawnable.StaticMinion:
-                    enemy = PoolManager.instance.GetSimpleEnemy();
-                    break;
-                case Spawnable.Stalker:
-                    enemy = PoolManager.instance.GetStalkerEnemy();
-                    break;
-                case Spawnable.LasetTurret:
-                    enemy = PoolManager.instance.GetLaserTurretEnemy();
-                    break;
-                case Spawnable.MissileTurret:
-                    enemy = PoolManager.instance.GetMissileTurretEnemy();
-                    break;
-            }
-
-            if (enemy)
-            {
-                enemy.Respawn(pos);
-                currentWaveEnemies.Add(enemy);
-                enemiesAlive.Add(enemy);
-                enemy.healthComponent.IncreaseMaxHPOVerOriginal(LevelController.currentLevel * 1);
-            }
+            SpawnEnemy(spawnData);
             yield return new WaitForSeconds(group.delayBetweenSpawns);
+        }
+    }
+
+    private void SpawnEnemy(SpawnData spawnData)
+    {
+        var pos = spawnData.GetPositionInRegion();
+        Enemy enemy = null;
+        switch (spawnData.spawnable)
+        {
+            case Spawnable.StaticMinion:
+                enemy = PoolManager.instance.GetSimpleEnemy();
+                break;
+            case Spawnable.Stalker:
+                enemy = PoolManager.instance.GetStalkerEnemy();
+                break;
+            case Spawnable.LasetTurret:
+                enemy = PoolManager.instance.GetLaserTurretEnemy();
+                break;
+            case Spawnable.MissileTurret:
+                enemy = PoolManager.instance.GetMissileTurretEnemy();
+                break;
+        }
+
+        if (enemy)
+        {
+            enemy.Respawn(pos);
+            currentWaveEnemies.Add(enemy);
+            enemiesAlive.Add(enemy);
+            enemy.healthComponent.IncreaseMaxHPOVerOriginal(LevelController.currentLevel * 1);
         }
     }
 
@@ -241,7 +255,10 @@ public class LevelController : MonoBehaviour
         bossHPBar.Hide();
         yield return new WaitForSeconds(1f);
         upgradePhaseController.StartUpgradePhase();
-
+        for (int i = enemiesAlive.Count - 1; i >= 0; i--)
+        {
+            enemiesAlive[i].Die();
+        }
         //AudioManager.PlayAmbience();
     }
 

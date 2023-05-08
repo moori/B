@@ -48,6 +48,11 @@ public class Bullet : MonoBehaviour
     {
         isDead = true;
         gameObject.SetActive(false);
+        var p = PoolManager.instance.GetHitParticle();
+        p.transform.position = transform.position;
+        //p.transform.forward = -transform.up;
+        p.gameObject.SetActive(true);
+        p.Play();
     }
 
     private void Update()

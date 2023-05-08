@@ -1836,7 +1836,7 @@ MonoBehaviour:
   initialDelay: 0
   delayBetweenShots: 1
   volleysPerAttack: 1
-  delayBetweenAttacks: 4
+  delayBetweenAttacks: 5
   delayBetweenVolleys: 0
   angleError: 0
   bulletType: 2
@@ -3181,7 +3181,7 @@ MonoBehaviour:
   initialDelay: 2
   delayBetweenShots: 1
   volleysPerAttack: 1
-  delayBetweenAttacks: 4
+  delayBetweenAttacks: 5
   delayBetweenVolleys: 0
   angleError: 0
   bulletType: 2
